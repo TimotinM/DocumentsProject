@@ -1,13 +1,19 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Data.Identity
+namespace Domain.Entities
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<int>
     {
-        public int IdInstitution { get; set; }
         public bool IsEnabled { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Patronymic { get; set; }
+        public string? Patronymic { get; set; }
+
+        public int? IdInstitution { get; set; }
+        public Institution? Institution { get; set; }
+
+        public IList<Document>? Documents { get; set; }
+        public IList<Project>? Projects { get; set; }
     }
 }

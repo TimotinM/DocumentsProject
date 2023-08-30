@@ -1,5 +1,5 @@
 ﻿using DocumentsProject.Infrastructure.Data;
-using Infrastructure.Data.Identity;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +18,10 @@ public static class DependencyInjection
             options.UseSqlServer(connectionString);
         });
 
-        services.AddDefaultIdentity<ApplicationUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+        services
+            .AddDefaultIdentity<ApplicationUser>()
+            .AddRoles<IdentityRole<int>>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services;
     }
