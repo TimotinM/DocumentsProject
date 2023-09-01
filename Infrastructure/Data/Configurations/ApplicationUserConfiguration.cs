@@ -1,5 +1,4 @@
 ﻿
-
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,7 +15,7 @@ namespace Infrastructure.Data.Configurations
 
             builder.HasOne(i => i.Institution)
                 .WithMany(u => u.ApplicationUsers)
-                .HasForeignKey(i => i.IdInstitution);         
+                .HasForeignKey(i => i.IdInstitution);
 
         }
     }
