@@ -8,6 +8,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -15,6 +17,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
     await app.InitialiseDatabaseAsync();
+    app.UseSwagger(options =>
+    {
+        options.SerializeAsV2 = true;
+    });
+    app.UseSwaggerUI();
 }
 else
 {
