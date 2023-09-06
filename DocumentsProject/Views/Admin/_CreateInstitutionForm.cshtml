@@ -1,0 +1,40 @@
+﻿@using Application.DTOs.Institution;
+@model CreateInstitutionDto
+
+<form class="bg-white" id="createInstitutionForm" asp-controller="Admin" asp-action="CreateInstitution" method="post">
+    @if (ViewBag.Error != null)
+    {
+        @foreach (var error in ViewBag.Error)
+        {
+            <p class="text-danger">@error</p>
+        }
+    }
+    <div class="mb-3 row">
+        <label class=" col-sm-2 form-label" asp-for="Name">Name: </label>
+        <div class="col-sm-10">
+            <input class=" form-control" type="text" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-2 form-label" asp-for="InstCode">Code: </label>
+        <div class="col-sm-10">
+            <input class=" form-control" type="text" asp-for="InstCode">
+            <span class="text-danger" asp-validation-for="InstCode"></span>
+        </div>
+        <br>
+    </div>
+
+    <label class="form-label" asp-for="AdditionalInfo">Additional Informations: </label>
+    <br>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-10">
+            <textarea class="form-control" type="text" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <br>
+    </div>
+
+</form>

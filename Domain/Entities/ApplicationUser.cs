@@ -12,7 +12,7 @@ namespace Domain.Entities
         public int? IdInstitution { get; set; }
         public Institution? Institution { get; set; }
 
-        public IList<Document>? Documents { get; set; }
-        public IList<Project>? Projects { get; set; }
+        public IList<Document>? Documents { get; set; } = new List<Document>();
+        public IList<Project>? Projects { get; set; } = new List<Project>();
     }
 }

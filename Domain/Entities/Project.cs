@@ -17,6 +17,6 @@ namespace Domain.Entities
         public int IdUser { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public IList<Document>? Documents { get; set; }
+        public IList<Document>? Documents { get; set; } = new List<Document>();
     }
 }

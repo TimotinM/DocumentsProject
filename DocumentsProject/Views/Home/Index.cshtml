@@ -1,8 +1,36 @@
-﻿@{
+﻿@using Domain.Entities;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
+@inject UserManager<ApplicationUser> UserManager
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (SignInManager.IsSignedIn(User))
+{
+    @if (User.IsInRole("Administrator"))
+    {
+        <p>Admin</p>
+        <partial name="~/Views/Admin/Index.cshtml" />
+    }
+    else if (User.IsInRole("BankOperator"))
+    {
+        <p>OP bancar</p>
+    }
+    else if (User.IsInRole("CedacriOperator"))
+    {
+        <p>OP Ced</p>
+    }
+}
+else
+{
+    
+}
+
+@section Scripts {
+    <script src="~/js/institutions.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+

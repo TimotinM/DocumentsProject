@@ -6,7 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -15,6 +18,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
     await app.InitialiseDatabaseAsync();
+    app.UseSwagger(options =>
+    {
+        options.SerializeAsV2 = true;
+    });
+    app.UseSwaggerUI();
 }
 else
 {
