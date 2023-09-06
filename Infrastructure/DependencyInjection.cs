@@ -1,4 +1,5 @@
-﻿using DocumentsProject.Infrastructure.Data;
+﻿using Application.Common.Interfaces;
+using DocumentsProject.Infrastructure.Data;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,8 @@ public static class DependencyInjection
         {
             options.UseSqlServer(connectionString);
         });
+
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 

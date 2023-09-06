@@ -8,8 +8,8 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string? AdditionalInfo { get; set; }
 
-        public IList<Document>? Documents { get; set; }
-        public IList<Project>? Projects { get; set; }
-        public IList<ApplicationUser>? ApplicationUsers { get; set; }
+        public IList<Document>? Documents { get; set; } = new List<Document>();
+        public IList<Project>? Projects { get; set; } = new List<Project>();
+        public IList<ApplicationUser>? ApplicationUsers { get; set; } = new List<ApplicationUser>();
     }
 }

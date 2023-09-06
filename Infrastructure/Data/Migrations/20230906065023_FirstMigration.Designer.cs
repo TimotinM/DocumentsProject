@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Data.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230830135610_firstMigration")]
-    partial class firstMigration
+    [Migration("20230906065023_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DocumentTypeDocumentType", b =>
-                {
-                    b.Property<int>("MacroId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MicroId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MacroId", "MicroId");
-
-                    b.HasIndex("MicroId");
-
-                    b.ToTable("DocumentsTypeIerarchy", (string)null);
-                });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
@@ -52,7 +37,7 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<DateTimeOffset?>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
@@ -73,7 +58,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("IdUser")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
@@ -116,7 +101,7 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<DateTimeOffset?>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
@@ -128,7 +113,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("IsMacro")
                         .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
@@ -139,9 +124,28 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("TypeDscr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("DocumentTypes");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DocumentTypeIerarchy", b =>
+                {
+                    b.Property<int>("IdMicro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMacro")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdMicro", "IdMacro");
+
+                    b.HasIndex("IdMacro");
+
+                    b.ToTable("DocumentsTypeIerarchy");
                 });
 
             modelBuilder.Entity("Domain.Entities.Institution", b =>
@@ -156,7 +160,7 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<DateTimeOffset?>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
@@ -167,7 +171,7 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
@@ -195,7 +199,7 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<DateTimeOffset?>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
@@ -216,7 +220,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("LastModifiedBy")
@@ -476,21 +480,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("DocumentTypeDocumentType", b =>
-                {
-                    b.HasOne("Domain.Entities.DocumentType", null)
-                        .WithMany()
-                        .HasForeignKey("MacroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.DocumentType", null)
-                        .WithMany()
-                        .HasForeignKey("MicroId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
                     b.HasOne("Domain.Entities.Institution", "Institution")
@@ -520,6 +509,25 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Institution");
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DocumentTypeIerarchy", b =>
+                {
+                    b.HasOne("Domain.Entities.DocumentType", "Macro")
+                        .WithMany("DocumentsTypeIerarchyMacro")
+                        .HasForeignKey("IdMacro")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DocumentType", "Micro")
+                        .WithMany("DocumentsTypeIerarchyMicro")
+                        .HasForeignKey("IdMicro")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Macro");
+
+                    b.Navigation("Micro");
                 });
 
             modelBuilder.Entity("Domain.Entities.Project", b =>
@@ -602,6 +610,10 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Domain.Entities.DocumentType", b =>
                 {
                     b.Navigation("Documents");
+
+                    b.Navigation("DocumentsTypeIerarchyMacro");
+
+                    b.Navigation("DocumentsTypeIerarchyMicro");
                 });
 
             modelBuilder.Entity("Domain.Entities.Institution", b =>

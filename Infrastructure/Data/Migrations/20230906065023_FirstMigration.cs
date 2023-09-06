@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Data.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class firstMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,10 +35,11 @@ namespace Infrastructure.Data.Migrations
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsMacro = table.Column<bool>(type: "bit", nullable: false),
+                    TypeDscr = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDateGrouped = table.Column<bool>(type: "bit", nullable: false),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -55,9 +56,9 @@ namespace Infrastructure.Data.Migrations
                     InstCode = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     AdditionalInfo = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -90,21 +91,20 @@ namespace Infrastructure.Data.Migrations
                 name: "DocumentsTypeIerarchy",
                 columns: table => new
                 {
-                    MacroId = table.Column<int>(type: "int", nullable: false),
-                    MicroId = table.Column<int>(type: "int", nullable: false)
+                    IdMacro = table.Column<int>(type: "int", nullable: false),
+                    IdMicro = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentsTypeIerarchy", x => new { x.MacroId, x.MicroId });
+                    table.PrimaryKey("PK_DocumentsTypeIerarchy", x => new { x.IdMicro, x.IdMacro });
                     table.ForeignKey(
-                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_MacroId",
-                        column: x => x.MacroId,
+                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_IdMacro",
+                        column: x => x.IdMacro,
                         principalTable: "DocumentTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_MicroId",
-                        column: x => x.MicroId,
+                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_IdMicro",
+                        column: x => x.IdMicro,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id");
                 });
@@ -244,9 +244,9 @@ namespace Infrastructure.Data.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IdInstitution = table.Column<int>(type: "int", nullable: true),
                     IdUser = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -280,9 +280,9 @@ namespace Infrastructure.Data.Migrations
                     IdUser = table.Column<int>(type: "int", nullable: false),
                     IdType = table.Column<int>(type: "int", nullable: false),
                     IdProject = table.Column<int>(type: "int", nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -377,9 +377,9 @@ namespace Infrastructure.Data.Migrations
                 column: "IdUser");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentsTypeIerarchy_MicroId",
+                name: "IX_DocumentsTypeIerarchy_IdMacro",
                 table: "DocumentsTypeIerarchy",
-                column: "MicroId");
+                column: "IdMacro");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_IdInstitution",
