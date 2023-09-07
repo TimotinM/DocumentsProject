@@ -19,8 +19,8 @@ namespace Application.Users.Handlers.Queris
             _userManager = userManager;
         }
         public async Task<List<GetUsersListDto>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
-        {
-            var users = await _userManager.Users.Select(x => new GetUsersListDto
+        {           
+            var users = await _userManager.Users.Select(x => new GetUsersListDto()
             {
                 UserName = x.UserName,
                 Id = x.Id,

@@ -4,6 +4,7 @@ using Application.DTOs.User;
 using Application.Istitutions.Requests.Commands;
 using Application.Istitutions.Requests.Queris;
 using Application.Responses;
+using Application.Users.Requests.Queris;
 using DocumentsProject.Models;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,12 +16,10 @@ using Newtonsoft.Json.Serialization;
 
 namespace DocumentsProject.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;
-        private IValidator<CreateInstitutionDto> _validator;
+        private readonly IValidator<CreateInstitutionDto> _validator;
 
         public AdminController(IMediator mediator, IValidator<CreateInstitutionDto> validator)
         {
@@ -61,7 +60,7 @@ namespace DocumentsProject.Controllers
         [HttpGet]
         public async Task<ActionResult<List<GetUsersListDto>>> GetUsers()
         {
-            var request = new GetUsersListDto();
+            var request = new GetUsersRequest();
             var users = await _mediator.Send(request);
             return Json(new {data = users});
         }
