@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Institution;
 using Application.DTOs.Institution.Validators;
+using Application.DTOs.User;
 using Application.Istitutions.Requests.Commands;
 using Application.Istitutions.Requests.Queris;
 using Application.Responses;
@@ -7,10 +8,15 @@ using DocumentsProject.Models;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 namespace DocumentsProject.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;
@@ -36,28 +42,28 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateInstitution(List<string> errors = null)
+        public async Task<ActionResult> GetCreateInstitution(List<string> errors = null)
         {
             ViewBag.Errors = errors;
-            return PartialView("_CreateInstitutionForm");
+            return View("_CreateInstitutionForm");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<BaseCommandResponse>> CreateInstitution([FromForm] CreateInstitutionDto request)
+        public async Task<ActionResult> CreateInstitution([FromForm] CreateInstitutionDto request)
         {
-            ValidationResult validationResult = await _validator.ValidateAsync(request);
+                var command = new CreateInstitutionCommand() { InstitutionDto = request };
+                var response = await _mediator.Send(command);
+                ViewBag.Errors = response.Errors;
+                return await GetCreateInstitution(response.Errors);
+        }
 
-            if (!validationResult.IsValid)
-            {
-                var errors = new List<string>();
-                foreach (var error in validationResult.Errors)
-                    errors.Add(error.ErrorMessage);
-                return CreateInstitution(errors);
-            }
-            var command = new CreateInstitutionCommand() { InstitutionDto = request };
-            var response = await _mediator.Send(command);
-            return Ok("");
+        [HttpGet]
+        public async Task<ActionResult<List<GetUsersListDto>>> GetUsers()
+        {
+            var request = new GetUsersListDto();
+            var users = await _mediator.Send(request);
+            return Json(new {data = users});
         }
     }
 }

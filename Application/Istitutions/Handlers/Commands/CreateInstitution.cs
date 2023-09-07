@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.DTOs.Institution.Validators;
 using Application.Istitutions.Requests.Commands;
 using Application.Responses;
 using Domain.Entities;
@@ -17,20 +18,31 @@ namespace Application.Istitutions.Handlers.Commands
         public async Task<BaseCommandResponse> Handle(CreateInstitutionCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResponse();
+            var validator = new CreateInstitutionDtoValidator();
+            var validationResult = await validator.ValidateAsync(request.InstitutionDto);
 
-            var entity = new Institution
+            if (!validationResult.IsValid)
             {
-                InstCode = request.InstitutionDto.InstCode,
-                Name = request.InstitutionDto.Name,
-                AdditionalInfo = request.InstitutionDto.AdditionalInfo,
-                Created = DateTime.Now
-            };
+                response.Success = false;
+                response.Message = "Create Institution Failed";
+                response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+            }
+            else
+            {
+                var entity = new Institution
+                {
+                    InstCode = request.InstitutionDto.InstCode,
+                    Name = request.InstitutionDto.Name,
+                    AdditionalInfo = request.InstitutionDto.AdditionalInfo,
+                    Created = DateTime.Now
+                };
+                _context.Institutions.Add(entity);
 
-            _context.Institutions.Add(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+                response.Success = true;
+                response.Message = "Institution was created successful";             
+            }
 
-            await _context.SaveChangesAsync(cancellationToken);
-            response.Success = true;
-            response.Message = "Institution was created successful";
             return response;
         }
     }
