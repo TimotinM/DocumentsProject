@@ -26,11 +26,21 @@ $(document).ready(function () {
             { "data": "userName", "title": "User Name", "name": "userName", "autoWidth": true },
             { "data": "nameSurname", "title": "Name Surname", "name": "nameSurname", "autoWidth": true },
             { "data": "email", "title": "Email", "name": "email", "autoWidth": true },
-            { "data": "isEnabled", "title": "Disponible", "name": "isEnabled", "autoWidth": true },
-
+            {
+                "data": "isEnabled",
+                "title": "Enabled",
+                "name": "isEnabled",
+                "autoWidth": true,
+                "render": function (data, type, full, meta) {
+                    if (type === 'display') {
+                        return '<input type="checkbox" ' + (data ? 'checked' : '') + '>';
+                    }
+                    return data;
+                }
+            }
         ]
-
     });
+
 });
 
 function createInstitution() {

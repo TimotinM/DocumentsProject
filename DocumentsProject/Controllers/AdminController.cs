@@ -4,6 +4,7 @@ using Application.DTOs.User;
 using Application.Istitutions.Requests.Commands;
 using Application.Istitutions.Requests.Queris;
 using Application.Responses;
+using Application.Users.Requests.Conmmand;
 using Application.Users.Requests.Queris;
 using DocumentsProject.Models;
 using FluentValidation;
@@ -58,11 +59,19 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetUsersListDto>>> GetUsers()
+        public async Task<ActionResult<List<UsersListDto>>> GetUsers()
         {
             var request = new GetUsersRequest();
             var users = await _mediator.Send(request);
             return Json(new {data = users});
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BaseCommandResponse>> CreateUser([FromForm] CreateUserDto request)
+        {
+            var command = new CreateUserCommand() { UserDto = request };
+            var response = await _mediator.Send(command);
+            return Json(response);
         }
     }
 }

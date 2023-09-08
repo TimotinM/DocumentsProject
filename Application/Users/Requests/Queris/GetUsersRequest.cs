@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Users.Requests.Queris
 {
-    public class GetUsersRequest : IRequest<List<GetUsersListDto>>
+    public class GetUsersRequest : IRequest<List<UsersListDto>>
     {
 
     }

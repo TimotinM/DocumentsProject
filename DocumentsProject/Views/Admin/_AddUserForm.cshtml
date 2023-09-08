@@ -1,0 +1,98 @@
+﻿@using Application.DTOs.User;
+@model CreateUserDto
+
+<form class="bg-white" id="createInstitutionForm">
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="UserName">*Username: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" type="text" asp-for="UserName">
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="Password">*Password: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" type="text" asp-for="Password">
+            <span class="text-danger" asp-validation-for="Password"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="ConfirmPassword">*Confirm: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="ConfirmPassword">
+            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Email">*Email: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Email">
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Name">*Name: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Surname">*Surname: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Surname">
+            <span class="text-danger" asp-validation-for="Surname"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Patronymic">Patronymic: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Patronymic">
+            <span class="text-danger" asp-validation-for="Patronymic"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="UserRole">*Role: </label>
+        <div class="col-sm-9">
+            <select asp-for="UserRole">
+                <option>
+                    Test
+                </option>
+            </select>
+            <span class="text-danger" asp-validation-for="UserRole"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="IsEnabled">Enabled: </label>
+        <div class="col-sm-9">
+            <input type="checkbox" asp-for="IsEnabled">
+        </div>
+        <br>
+    </div>
+
+    <div class="row justify-content-between">
+        <div class="col-3">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

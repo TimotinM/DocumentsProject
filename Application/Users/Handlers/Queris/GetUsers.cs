@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Users.Handlers.Queris
 {
-    public class GetUsers : IRequestHandler<GetUsersRequest, List<GetUsersListDto>>
+    public class GetUsers : IRequestHandler<GetUsersRequest, List<UsersListDto>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -18,9 +18,9 @@ namespace Application.Users.Handlers.Queris
         {
             _userManager = userManager;
         }
-        public async Task<List<GetUsersListDto>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
+        public async Task<List<UsersListDto>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
         {           
-            var users = await _userManager.Users.Select(x => new GetUsersListDto()
+            var users = await _userManager.Users.Select(x => new UsersListDto()
             {
                 UserName = x.UserName,
                 Id = x.Id,

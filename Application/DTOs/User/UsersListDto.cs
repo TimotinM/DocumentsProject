@@ -3,7 +3,7 @@ using Application.DTOs.Common;
 
 namespace Application.DTOs.User
 {
-    public class GetUsersListDto : BaseDto
+    public class UsersListDto : BaseDto
     {
         public bool IsEnabled { get; set; }
         public string? NameSurname { get; set; }
