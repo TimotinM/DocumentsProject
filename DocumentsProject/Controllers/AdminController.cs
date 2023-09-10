@@ -49,13 +49,12 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateInstitution([FromForm] CreateInstitutionDto request)
+        public async Task<ActionResult<BaseCommandResponse>> CreateInstitution([FromForm] CreateInstitutionDto request)
         {
                 var command = new CreateInstitutionCommand() { InstitutionDto = request };
                 var response = await _mediator.Send(command);
                 ViewBag.Errors = response.Errors;
-                return await GetCreateInstitution(response.Errors);
+                return response;
         }
 
         [HttpGet]

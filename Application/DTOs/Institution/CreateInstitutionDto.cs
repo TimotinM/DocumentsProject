@@ -2,7 +2,7 @@
 
 namespace Application.DTOs.Institution
 {
-    public class CreateInstitutionDto : IInstitutionDto
+    public class CreateInstitutionDto
     {
         public string InstCode { get; set; }
         public string Name { get; set; }

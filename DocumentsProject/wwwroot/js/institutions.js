@@ -44,21 +44,14 @@ $(document).ready(function () {
 });
 
 function createInstitution() {
-    var form = $("#createProjectForm");
+    var form = $("#createInstitutionForm");
     if (form.valid()) {
-        var url = form.attr('action');
         $.ajax({
-            url: url,
-            xhrFields: {
-                withCredentials: true
-            },
+            url: "/Admin/CreateInstitution",
             data: form.serialize(),
             method: "POST",
-            success: function (response) {
-                /*$('#institutionsDatatable').DataTable().ajax.reload();
-                $('#createInstitutionModal').modal('toggle'); */
-                $('#createInstitutionFormContent').html(null);
-                $('#createInstitutionFormContent').html(response);
+            success: function(response) {
+                $('#institutionsDatatable').DataTable().columns.adjust();
             }
         });
     }
