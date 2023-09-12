@@ -1,7 +1,4 @@
-﻿
-using Application.DTOs.Institution;
-
-namespace Application.DTOs.User
+﻿namespace Application.Users.Conmmand
 {
     public class CreateUserDto
     {
@@ -12,8 +9,8 @@ namespace Application.DTOs.User
         public string Name { get; set; }
         public string Surname { get; set; }
         public string? Patronymic { get; set; }
-        public List<UserRoleDto> UserRole { get; set; }
-        public InstitutionDto Institution { get; set; }
+        public string UserRole { get; set; }
+        public int? IdInstitution { get; set; }
         public bool IsEnabled { get; set; }
     }
 }

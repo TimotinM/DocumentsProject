@@ -1,13 +1,16 @@
-﻿
-using Application.DTOs.User.Validators;
+﻿using Application.Istitutions.Commands;
 using Application.Responses;
-using Application.Users.Requests.Conmmand;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Users.Handlers.Conmmand
+namespace Application.Users.Conmmand
 {
+    public class CreateUserCommand : IRequest<BaseCommandResponse>
+    {
+        public CreateUserDto UserDto { get; set; }
+    }
+
     public class CreateUserComandHandler : IRequestHandler<CreateUserCommand, BaseCommandResponse>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -41,7 +44,9 @@ namespace Application.Users.Handlers.Conmmand
                 user.Name = request.UserDto.Name;
                 user.Surname = request.UserDto.Surname;
                 user.Patronymic = request.UserDto.Patronymic;
+                user.IdInstitution = request.UserDto.IdInstitution;
                 var result = await _userManager.CreateAsync(user, request.UserDto.Password);
+                await _userManager.AddToRoleAsync(user, request.UserDto.UserRole);
 
                 response.Success = true;
                 response.Message = "Institution was created successful";

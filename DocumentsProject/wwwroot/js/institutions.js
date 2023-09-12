@@ -1,9 +1,10 @@
 ﻿
 $(document).ready(function () {
     $("#institutionsDatatable").DataTable({
+        serverSide: true,
         "ajax": {
             "url": "/Admin/GetInstitutionList",
-            "type": "GET",
+            "type": "POST",
             "datatype": "json"
         },
         "columns": [
@@ -16,9 +17,10 @@ $(document).ready(function () {
     });
 
     $("#usersDatatable").DataTable({
+        serverSide: true,
         "ajax": {
             "url": "/Admin/GetUsers",
-            "type": "GET",
+            "type": "POST",
             "datatype": "json"
         },
         "columns": [
@@ -58,6 +60,21 @@ function createInstitution() {
     
 }
 
+function createUser() {
+    var form = $("#createUserForm");
+    if (form.valid()) {
+        $.ajax({
+            url: "/Admin/CreateUser",           
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#usersDatatable').DataTable().columns.adjust();
+            }
+        });
+    }
+
+}
+
 
 function loadCreateInstitutionForm() {
     $.ajax({
@@ -68,4 +85,24 @@ function loadCreateInstitutionForm() {
             $('#createInstitutionFormContent').html(response);
         }
     });
+}
+
+function loadCreateUserForm() {
+    $.ajax({
+        url: "/Admin/GetCreateUser",
+        method: "GET",
+        success: function (response) {
+            $('#createUserFormContent').html(null);
+            $('#createUserFormContent').html(response);
+        }
+    });
+}
+
+function renderInstitutionSelect(value) {
+    if (value == 'BankOperator') {
+        document.getElementById("institutionSelect").hidden = false;
+    }
+    else {
+        document.getElementById("institutionSelect").hidden = true;
+    }
 }

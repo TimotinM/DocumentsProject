@@ -1,5 +1,4 @@
-﻿
-namespace Application.DTOs.Common
+﻿namespace Application.Common
 {
     public class BaseDto
     {

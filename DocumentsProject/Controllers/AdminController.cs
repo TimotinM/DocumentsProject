@@ -1,19 +1,12 @@
-﻿using Application.DTOs.Institution;
-using Application.DTOs.Institution.Validators;
-using Application.DTOs.User;
-using Application.Istitutions.Requests.Commands;
-using Application.Istitutions.Requests.Queris;
+﻿using Application.Istitutions.Commands;
+using Application.Istitutions.Queries;
 using Application.Responses;
-using Application.Users.Requests.Conmmand;
-using Application.Users.Requests.Queris;
-using DocumentsProject.Models;
+using Application.Users.Conmmand;
+using Application.Users.Queris;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
+using ProjectManager.Application.TableParameters;
 
 namespace DocumentsProject.Controllers
 {
@@ -32,13 +25,13 @@ namespace DocumentsProject.Controllers
             return View();
         }    
 
-        [HttpGet]
-        public async Task<ActionResult<List<InstitutionDto>>> GetInstitutionList()
+        [HttpPost]
+        public async Task<ActionResult> GetInstitutionList(DataTablesParameters dataTablesParameters = null)
         {
-            var request = new GetInstitutionsRequest();
-            var institutions = await _mediator.Send(request);
+            var request = new GetInstitutionsRequest() { Parameters = dataTablesParameters };
+            var response = await _mediator.Send(request);
 
-            return Json(new { data = institutions });
+            return Ok(response);
         }
 
         [HttpGet]
@@ -57,14 +50,25 @@ namespace DocumentsProject.Controllers
                 return response;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<UsersListDto>>> GetUsers()
+        [HttpPost]
+        public async Task<ActionResult> GetUsers(DataTablesParameters dataTablesParameters = null)
         {
-            var request = new GetUsersRequest();
-            var users = await _mediator.Send(request);
-            return Json(new {data = users});
+            var request = new GetUsersRequest() { Parameters = dataTablesParameters };
+            var response = await _mediator.Send(request);
+
+            return Ok(response);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCreateUser()
+        {
+            var request = new GetInstitutionsRequest();
+            var institutions = await _mediator.Send(request);
+            ViewBag.Institutions = institutions;
+            return PartialView("~/Views/Admin/_AddUserForm.cshtml");
+        }
+
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> CreateUser([FromForm] CreateUserDto request)
         {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.DTOs.Institution.Validators
+namespace Application.Istitutions.Commands
 {
     public class CreateInstitutionDtoValidator : AbstractValidator<CreateInstitutionDto>
     {

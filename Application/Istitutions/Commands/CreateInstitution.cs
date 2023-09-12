@@ -1,12 +1,14 @@
 ﻿using Application.Common.Interfaces;
-using Application.DTOs.Institution.Validators;
-using Application.Istitutions.Requests.Commands;
 using Application.Responses;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Istitutions.Handlers.Commands
+namespace Application.Istitutions.Commands
 {
+    public class CreateInstitutionCommand : IRequest<BaseCommandResponse>
+    {
+        public CreateInstitutionDto InstitutionDto { get; set; }
+    }
     public class CreateInstitutionCommandHandler : IRequestHandler<CreateInstitutionCommand, BaseCommandResponse>
     {
         private readonly IApplicationDbContext _context;
@@ -40,7 +42,7 @@ namespace Application.Istitutions.Handlers.Commands
 
                 await _context.SaveChangesAsync(cancellationToken);
                 response.Success = true;
-                response.Message = "Institution was created successful";             
+                response.Message = "Institution was created successful";
             }
 
             return response;

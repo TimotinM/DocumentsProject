@@ -1,7 +1,8 @@
-﻿
-namespace Application.DTOs.Institution
+﻿using Application.Common;
+
+namespace Application.Istitutions.Queries
 {
-    public interface IInstitutionDto
+    public class InstitutionListDto : BaseDto
     {
         public string InstCode { get; set; }
         public string Name { get; set; }

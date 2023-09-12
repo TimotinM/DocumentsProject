@@ -1,7 +1,6 @@
-﻿
-using Application.DTOs.Common;
+﻿using Application.Common;
 
-namespace Application.DTOs.User
+namespace Application.Users.Queris
 {
     public class UsersListDto : BaseDto
     {

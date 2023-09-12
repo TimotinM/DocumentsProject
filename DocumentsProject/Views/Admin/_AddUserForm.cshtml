@@ -1,9 +1,9 @@
-﻿@using Application.DTOs.User;
+﻿@using Application.Users.Conmmand;
 @model CreateUserDto
 
-<form class="bg-white" id="createUserForm">
+<form class="bg-white" id="createUserForm" asp-antiforgery="true">
     <div class="mb-3 row">
-        <label class=" col-sm-3 form-label" asp-for="UserName">*Username: </label>
+        <label class=" col-sm-3 form-label" asp-for="UserName">Username: </label>
         <div class="col-sm-9">
             <input class=" form-control" type="text" asp-for="UserName">
             <span class="text-danger" asp-validation-for="UserName"></span>
@@ -12,7 +12,7 @@
     </div>
 
     <div class="mb-3 row">
-        <label class=" col-sm-3 form-label" asp-for="Password">*Password: </label>
+        <label class=" col-sm-3 form-label" asp-for="Password">Password: </label>
         <div class="col-sm-9">
             <input class=" form-control" type="text" asp-for="Password">
             <span class="text-danger" asp-validation-for="Password"></span>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mb-3 row">
-        <label class=" col-sm-3 form-label" asp-for="ConfirmPassword">*Confirm: </label>
+        <label class=" col-sm-3 form-label" asp-for="ConfirmPassword">Confirm: </label>
         <div class="col-sm-9">
             <input class="form-control" type="text" asp-for="ConfirmPassword">
             <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="mb-3 row ">
-        <label class=" col-sm-3 form-label" asp-for="Email">*Email: </label>
+        <label class=" col-sm-3 form-label" asp-for="Email">Email: </label>
         <div class="col-sm-9">
             <input class="form-control" type="text" asp-for="Email">
             <span class="text-danger" asp-validation-for="Email"></span>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="mb-3 row ">
-        <label class=" col-sm-3 form-label" asp-for="Name">*Name: </label>
+        <label class=" col-sm-3 form-label" asp-for="Name">Name: </label>
         <div class="col-sm-9">
             <input class="form-control" type="text" asp-for="Name">
             <span class="text-danger" asp-validation-for="Name"></span>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="mb-3 row ">
-        <label class=" col-sm-3 form-label" asp-for="Surname">*Surname: </label>
+        <label class=" col-sm-3 form-label" asp-for="Surname">Surname: </label>
         <div class="col-sm-9">
             <input class="form-control" type="text" asp-for="Surname">
             <span class="text-danger" asp-validation-for="Surname"></span>
@@ -65,15 +65,31 @@
         <br>
     </div>
 
-    <div class="mb-3 row ">
-        <label class=" col-sm-3 form-label" asp-for="UserRole">*Role: </label>
+    <div class="mb-3 row " id="roleSelect">
+        <label class=" col-sm-3 form-label" asp-for="UserRole">Role: </label>
         <div class="col-sm-9">
-            <select asp-for="UserRole">
-                <option>
-                    Test
-                </option>
+            <select class="form-select" asp-for="UserRole" onchange="renderInstitutionSelect(this.value);">
+                <option value="Administrator"> Administrator </option>
+                <option value="CedacriOperator"> Cedacri Operator </option>
+                <option value="BankOperator"> Bank Operator </option>
             </select>
             <span class="text-danger" asp-validation-for="UserRole"></span>
+        </div>
+        <br>
+    </div>
+
+     <div class="mb-3 row " id="institutionSelect" hidden>
+        <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
+        <div class="col-sm-9">
+                <select class="form-select" asp-for="IdInstitution">
+                    <option selected>--Select Institution--</option>
+                    @foreach (var item in ViewBag.Institutions)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                    
+                </select>
+                <span class="text-danger" asp-validation-for="IdInstitution"></span>
         </div>
         <br>
     </div>
@@ -88,7 +104,7 @@
 
     <div class="row justify-content-between">
         <div class="col-3">
-            <button class="btn btn-primary">Submit</button>
+            <button onclick="createUser()" class="btn btn-primary">Submit</button>
         </div>
         <div class="col-3">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
