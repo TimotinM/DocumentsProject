@@ -1,4 +1,5 @@
-﻿@using Application.Istitutions.Commands;
+﻿@    using Application.Istitutions.Commands;
+    using Application.Istitutions.Commands.CreateInstitution;
 @model CreateInstitutionDto
 @{
     Layout = null;
@@ -33,12 +34,12 @@
         <br>
     </div>
 
-    <div class="row justify-content-between">
-        <div class="col-3">
-            <button onclick="createInstitution()" class="btn btn-primary">Submit</button>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button onclick="createInstitution()" class="btn btn-primary float-sm-end">Submit</button>
         </div>
-        <div class="col-3">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
         </div>
     </div>
 

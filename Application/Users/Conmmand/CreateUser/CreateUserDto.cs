@@ -1,4 +1,4 @@
-﻿namespace Application.Users.Conmmand
+﻿namespace Application.Users.Conmmand.CreateUser
 {
     public class CreateUserDto
     {

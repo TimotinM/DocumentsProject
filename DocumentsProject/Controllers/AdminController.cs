@@ -1,7 +1,8 @@
-﻿using Application.Istitutions.Commands;
+﻿using Application.Istitutions.Commands.CreateInstitution;
 using Application.Istitutions.Queries;
 using Application.Responses;
-using Application.Users.Conmmand;
+using Application.Users.Conmmand.CreateUser;
+using Application.Users.Conmmand.UpdateUser;
 using Application.Users.Queris;
 using FluentValidation;
 using MediatR;
@@ -75,6 +76,14 @@ namespace DocumentsProject.Controllers
             var command = new CreateUserCommand() { UserDto = request };
             var response = await _mediator.Send(command);
             return Json(response);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateUserEnabled([FromForm] UpdateUserEnabledDto request)
+        {
+            var command = new UpdateUserEnabledCommand() { UserDto = request };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }

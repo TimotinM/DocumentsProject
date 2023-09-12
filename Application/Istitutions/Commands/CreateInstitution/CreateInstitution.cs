@@ -3,7 +3,7 @@ using Application.Responses;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Istitutions.Commands
+namespace Application.Istitutions.Commands.CreateInstitution
 {
     public class CreateInstitutionCommand : IRequest<BaseCommandResponse>
     {

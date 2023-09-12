@@ -4,19 +4,19 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Users.Conmmand
+namespace Application.Users.Conmmand.CreateUser
 {
     public class CreateUserCommand : IRequest<BaseCommandResponse>
     {
         public CreateUserDto UserDto { get; set; }
     }
 
-    public class CreateUserComandHandler : IRequestHandler<CreateUserCommand, BaseCommandResponse>
+    public class CreateUser : IRequestHandler<CreateUserCommand, BaseCommandResponse>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
 
-        public CreateUserComandHandler(UserManager<ApplicationUser> userManager, IUserStore<ApplicationUser> userStore)
+        public CreateUser(UserManager<ApplicationUser> userManager, IUserStore<ApplicationUser> userStore)
         {
             _userManager = userManager;
             _userStore = userStore;

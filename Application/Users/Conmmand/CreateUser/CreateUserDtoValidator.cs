@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Users.Conmmand
+namespace Application.Users.Conmmand.CreateUser
 {
     public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>
     {

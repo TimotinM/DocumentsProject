@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Istitutions.Commands
+namespace Application.Istitutions.Commands.CreateInstitution
 {
     public class CreateInstitutionDto
     {
