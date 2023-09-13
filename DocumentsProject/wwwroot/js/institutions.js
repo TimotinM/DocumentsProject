@@ -12,8 +12,9 @@ function createInstitution() {
             url: "/Admin/CreateInstitution",
             data: form.serialize(),
             method: "POST",
-            success: function(response) {
-                $('#institutionsDatatable').DataTable().columns.adjust();
+            success: function (response) {
+               $('#modalContainer').modal('toggle');
+               $('#institutionsDatatable').DataTable().ajax.reload();
             }
         });
     }
@@ -28,11 +29,44 @@ function createUser() {
             data: form.serialize(),
             method: "POST",
             success: function (response) {
-                $('#usersDatatable').DataTable().columns.adjust();
+                $('#modalContainer').modal('toggle');
+                $("#createUserForm")[0].reset();
+                $('#usersDatatable').DataTable().ajax.reload();
             }
         });
     }
+}
 
+function changeUserEnable(userId) {
+    $.ajax({
+        url: "/Admin/UpdateUserEnabled",
+        data: {
+            id: userId
+        },
+        method: "POST",
+        success: function (response) {
+            $('#usersDatatable').DataTable().ajax.reload();
+        }
+    });
+}
+
+function changeUserPassword() {
+    var form = $("#changeUserPasswordForm");
+    if (form.valid()) {
+        $.ajax({
+            url: form.attr('action'),
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $("#changeUserPasswordForm")[0].reset();
+            },
+            error: function (response) {
+                console.log(response.responseText);
+                alert(response.responseText);
+            }
+        });
+    }
 }
 
 
@@ -40,9 +74,14 @@ function loadCreateInstitutionForm() {
     $.ajax({
         url: "/Admin/GetCreateInstitution",
         method: "GET",
+        async: false,
         success: function (response) {
-            $('#createInstitutionFormContent').html(null);
-            $('#createInstitutionFormContent').html(response);
+            $('#modalTitle').html("New Institution")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
         }
     });
 }
@@ -51,9 +90,36 @@ function loadCreateUserForm() {
     $.ajax({
         url: "/Admin/GetCreateUser",
         method: "GET",
+        async: false,
         success: function (response) {
-            $('#createUserFormContent').html(null);
-            $('#createUserFormContent').html(response);
+            $('#modalTitle').html(null)
+            $('#modalTitle').html("New User")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+        }
+    });
+}
+
+function loadChangeUserPasswordForm(userId) {
+    $.ajax({
+        url: "/Admin/GetChangeUserPassword",
+        method: "GET",
+        data: {
+            id: userId
+        },
+        async: false,
+        success: function (response) {
+            $('#modalTitle').html(null)
+            $('#modalTitle').html("Change Password")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+            $('#modalContainer').modal('toggle');
         }
     });
 }
@@ -131,17 +197,19 @@ function loadUsersTable() {
         callback: function (key, options) {
             let row = table.row(options.$trigger);
             switch (key) {
-                case 'details':
+                case 'enabled':
+                    changeUserEnable(row.data()["id"]);
                     break;
-                case 'edit':
+                case 'changePassword':
+                    loadChangeUserPasswordForm(row.data()["id"]);
                     break;
                 default:
                     break
             }
         },
-        items: {
-            "edit": { name: "Edit" },
-            "details": { name: "Details" }
+        items: {           
+            "changePassword": { name: "Change Password" },
+            "enabled": { name: "Enable/Disable" },
         }
     });
 }
@@ -152,5 +220,6 @@ function renderInstitutionSelect(value) {
     }
     else {
         document.getElementById("institutionSelect").hidden = true;
+        document.getElementById("institutionValue").value = null;
     }
 }

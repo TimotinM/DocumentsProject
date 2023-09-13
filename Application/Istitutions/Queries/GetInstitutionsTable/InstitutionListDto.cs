@@ -1,6 +1,6 @@
 ﻿using Application.Common;
 
-namespace Application.Istitutions.Queries
+namespace Application.Istitutions.Queries.GetInstitutionsTable
 {
     public class InstitutionListDto : BaseDto
     {

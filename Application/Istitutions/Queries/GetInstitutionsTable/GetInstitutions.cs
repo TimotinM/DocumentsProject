@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.TableParameters;
 
-namespace Application.Istitutions.Queries
+namespace Application.Istitutions.Queries.GetInstitutionsTable
 {
     public class GetInstitutionsRequest : IRequest<DataTablesResponse<InstitutionListDto>>
     {
@@ -33,10 +33,12 @@ namespace Application.Istitutions.Queries
                 .OrderByExtension(orderColumn, request.Parameters.Order[0].Dir)
                 .Skip(request.Parameters.Start)
                 .Take(request.Parameters.Length)
-                .Select(x => new InstitutionListDto {
+                .Select(x => new InstitutionListDto
+                {
                     Name = x.Name,
                     InstCode = x.InstCode,
-                    AdditionalInfo = x.AdditionalInfo})
+                    AdditionalInfo = x.AdditionalInfo
+                })
                 .ToListAsync();
 
             var total = await _context.Institutions

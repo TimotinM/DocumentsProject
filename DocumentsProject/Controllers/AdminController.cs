@@ -1,6 +1,8 @@
 ﻿using Application.Istitutions.Commands.CreateInstitution;
-using Application.Istitutions.Queries;
+using Application.Istitutions.Queries.GetInstitutionDropDownList;
+using Application.Istitutions.Queries.GetInstitutionsTable;
 using Application.Responses;
+using Application.Users.Conmmand.ChangeUserPassword;
 using Application.Users.Conmmand.CreateUser;
 using Application.Users.Conmmand.UpdateUser;
 using Application.Users.Queris;
@@ -36,10 +38,10 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCreateInstitution(List<string> errors = null)
+        public ActionResult GetCreateInstitution(List<string> errors = null)
         {
             ViewBag.Errors = errors;
-            return View("_CreateInstitutionForm");
+            return PartialView("_CreateInstitutionForm");
         }
 
         [HttpPost]
@@ -48,7 +50,7 @@ namespace DocumentsProject.Controllers
                 var command = new CreateInstitutionCommand() { InstitutionDto = request };
                 var response = await _mediator.Send(command);
                 ViewBag.Errors = response.Errors;
-                return response;
+                return Ok(response);
         }
 
         [HttpPost]
@@ -61,12 +63,20 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCreateUser()
+        public async Task<ActionResult> GetCreateUser()
         {
-            var request = new GetInstitutionsRequest();
+            var request = new GetInstitutionDropDownListRequest();
             var institutions = await _mediator.Send(request);
             ViewBag.Institutions = institutions;
-            return PartialView("~/Views/Admin/_AddUserForm.cshtml");
+            return PartialView("_AddUserForm");
+        }
+
+        [HttpGet]
+        public ActionResult GetChangeUserPassword(int id, List<string> errors = null)
+        {
+            ViewBag.UserId = id;
+            ViewBag.Errors = errors;
+            return PartialView("_ChangeUserPasswordForm");
         }
 
         [ValidateAntiForgeryToken]
@@ -75,15 +85,28 @@ namespace DocumentsProject.Controllers
         {
             var command = new CreateUserCommand() { UserDto = request };
             var response = await _mediator.Send(command);
-            return Json(response);
+            return response;
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseCommandResponse>> UpdateUserEnabled([FromForm] UpdateUserEnabledDto request)
+        public async Task<ActionResult<BaseCommandResponse>> UpdateUserEnabled(int id)
         {
-            var command = new UpdateUserEnabledCommand() { UserDto = request };
+            var command = new UpdateUserEnabledCommand() { Id = id };
             var response = await _mediator.Send(command);
             return Ok(response);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult<BaseCommandResponse>> ChangeUserPassword(int userId, [FromForm] ChangeUserPasswordDto request)
+        {
+            request.Id = userId;
+            var command = new ChangeUserPasswordCommand() { UserPassword = request };
+            var response = await _mediator.Send(command);
+            if (!response.Success)             
+                return BadRequest(response.Errors);
+            return Ok(response);
+        }
+     
     }
 }

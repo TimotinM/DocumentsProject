@@ -9,7 +9,7 @@ namespace Application.Users.Conmmand.UpdateUser
 {
     public class UpdateUserEnabledCommand : IRequest<BaseCommandResponse>
     {
-        public UpdateUserEnabledDto UserDto { get; set; }
+        public int Id { get; set; }
     }
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserEnabledCommand, BaseCommandResponse>
@@ -23,8 +23,8 @@ namespace Application.Users.Conmmand.UpdateUser
         public async Task<BaseCommandResponse> Handle(UpdateUserEnabledCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResponse();
-            var user = await _userManager.FindByIdAsync(request.UserDto.Id.ToString());
-            user.IsEnabled = request.UserDto.IsEnabled;
+            var user = await _userManager.FindByIdAsync(request.Id.ToString());
+            user.IsEnabled = !user.IsEnabled;
             await _userManager.UpdateAsync(user);
 
             return response;
