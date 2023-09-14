@@ -1,10 +1,4 @@
 ﻿
-$(document).ready(function () {
-    loadInstitutionsTable();
-    loadUsersTable();
-
-});
-
 function createInstitution() {
     var form = $("#createInstitutionForm");
     if (form.valid()) {
@@ -32,6 +26,9 @@ function createUser() {
                 $('#modalContainer').modal('toggle');
                 $("#createUserForm")[0].reset();
                 $('#usersDatatable').DataTable().ajax.reload();
+            },
+            error: function (response) {
+                alert(response.responseText);
             }
         });
     }
@@ -62,7 +59,6 @@ function changeUserPassword() {
                 $("#changeUserPasswordForm")[0].reset();
             },
             error: function (response) {
-                console.log(response.responseText);
                 alert(response.responseText);
             }
         });
@@ -96,6 +92,11 @@ function loadCreateUserForm() {
             $('#modalTitle').html("New User")
             $('#modalBody').html(null);
             $('#modalBody').html(response);
+            $('#roleSelect').multiselect({
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle btn btn-light" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+                },
+            });
             $("form").removeData("validator");
             $("form").removeData("unobtrusiveValidation");
             $.validator.unobtrusive.parse("form");
@@ -215,11 +216,18 @@ function loadUsersTable() {
 }
 
 function renderInstitutionSelect(value) {
-    if (value == 'BankOperator') {
+
+    var selected = [];
+    for (var option of document.getElementById('roleSelect').options) {
+        if (option.selected) {
+            selected.push(option.value);
+        }
+    }
+    if (selected.includes('BankOperator')) {
         document.getElementById("institutionSelect").hidden = false;
     }
     else {
-        document.getElementById("institutionSelect").hidden = true;
-        document.getElementById("institutionValue").value = null;
+        document.getElementById("institutionValue")[0].selected = true;
+        document.getElementById("institutionSelect").hidden = true;       
     }
 }

@@ -49,6 +49,15 @@ namespace Application.Users.Conmmand.CreateUser
                 .WithMessage("Only numbers and letters are alowed")
                 .MaximumLength(32)
                 .WithMessage("Username must be at most 32 characters long");
+
+            RuleFor(x => x.UserRoles)
+                .NotNull()
+                .WithMessage("User must have rol");
+
+            RuleFor(x => x.IdInstitution)
+                .NotEmpty()
+                .When(x => x.UserRoles.Contains("BankOperator"))
+                .WithMessage("Institution is required");
         }
 
         private async Task<bool> IsEmailUniqueAsync(string email)

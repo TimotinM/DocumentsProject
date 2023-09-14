@@ -9,7 +9,7 @@
         public string Name { get; set; }
         public string Surname { get; set; }
         public string? Patronymic { get; set; }
-        public string UserRole { get; set; }
+        public List<string> UserRoles { get; set; } = new List<string>();
         public int? IdInstitution { get; set; }
         public bool IsEnabled { get; set; }
     }

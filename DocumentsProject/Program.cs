@@ -1,5 +1,4 @@
 using Infrastructure.Data;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

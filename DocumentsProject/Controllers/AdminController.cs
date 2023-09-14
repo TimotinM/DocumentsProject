@@ -23,6 +23,8 @@ namespace DocumentsProject.Controllers
             _mediator = mediator;
             _validator = validator;
         }
+
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -85,6 +87,8 @@ namespace DocumentsProject.Controllers
         {
             var command = new CreateUserCommand() { UserDto = request };
             var response = await _mediator.Send(command);
+            if(!response.Success)
+                return BadRequest(response.Errors);
             return response;
         }
 

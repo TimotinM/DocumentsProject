@@ -65,29 +65,28 @@
         <br>
     </div>
 
-    <div class="mb-3 row " id="roleSelect">
-        <label class=" col-sm-3 form-label" asp-for="UserRole">Role: </label>
+    <div class="mb-3 row " id="roleSelectForm">
+        <label class=" col-sm-3 form-label" asp-for="UserRoles">Role: </label>
         <div class="col-sm-9">
-            <select class="form-select" asp-for="UserRole" onchange="renderInstitutionSelect(this.value);">
+            <select id="roleSelect" class="selectpicker" asp-for="UserRoles" multiple onchange="renderInstitutionSelect(this.value);">
                 <option value="Administrator"> Administrator </option>
                 <option value="CedacriOperator"> Cedacri Operator </option>
                 <option value="BankOperator"> Bank Operator </option>
             </select>
-            <span class="text-danger" asp-validation-for="UserRole"></span>
+            <span class="text-danger" asp-validation-for="UserRoles"></span>
         </div>
         <br>
     </div>
 
      <div class="mb-3 row " id="institutionSelect" hidden>
         <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
-        <div class="col-sm-9">
+        <div class="col-sm-5">
                 <select id="institutionValue" class="form-select" asp-for="IdInstitution">
-                    <option selected>--Select Institution--</option>
-                  @foreach (var item in ViewBag.Institutions)
-                    {
-                        <option value="@item.Id">@item.Name</option>
-                    }
-                    
+                    <option id="institutionDefault" selected>--Select Institution--</option>
+                      @foreach (var item in ViewBag.Institutions)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }                   
                 </select>
                 <span class="text-danger" asp-validation-for="IdInstitution"></span>
         </div>
