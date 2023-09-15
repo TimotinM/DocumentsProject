@@ -32,7 +32,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsMacro = table.Column<bool>(type: "bit", nullable: false),
                     TypeDscr = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -91,20 +91,21 @@ namespace Infrastructure.Migrations
                 name: "DocumentsTypeIerarchy",
                 columns: table => new
                 {
-                    IdMacro = table.Column<int>(type: "int", nullable: false),
-                    IdMicro = table.Column<int>(type: "int", nullable: false)
+                    MacroId = table.Column<int>(type: "int", nullable: false),
+                    MicroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentsTypeIerarchy", x => new { x.IdMicro, x.IdMacro });
+                    table.PrimaryKey("PK_DocumentsTypeIerarchy", x => new { x.MacroId, x.MicroId });
                     table.ForeignKey(
-                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_IdMacro",
-                        column: x => x.IdMacro,
+                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_MacroId",
+                        column: x => x.MacroId,
                         principalTable: "DocumentTypes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_IdMicro",
-                        column: x => x.IdMicro,
+                        name: "FK_DocumentsTypeIerarchy_DocumentTypes_MicroId",
+                        column: x => x.MicroId,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id");
                 });
@@ -377,9 +378,9 @@ namespace Infrastructure.Migrations
                 column: "IdUser");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentsTypeIerarchy_IdMacro",
+                name: "IX_DocumentsTypeIerarchy_MicroId",
                 table: "DocumentsTypeIerarchy",
-                column: "IdMacro");
+                column: "MicroId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_IdInstitution",

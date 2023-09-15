@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230906065023_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20230915112320_ChangeAlowNull")]
+    partial class ChangeAlowNull
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DocumentTypeDocumentType", b =>
+                {
+                    b.Property<int>("MacroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MicroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MacroId", "MicroId");
+
+                    b.HasIndex("MicroId");
+
+                    b.ToTable("DocumentsTypeIerarchy", (string)null);
+                });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
@@ -98,7 +113,6 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("Created")
@@ -125,27 +139,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("TypeDscr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("DocumentTypes");
-                });
-
-            modelBuilder.Entity("Domain.Entities.DocumentTypeIerarchy", b =>
-                {
-                    b.Property<int>("IdMicro")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdMacro")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdMicro", "IdMacro");
-
-                    b.HasIndex("IdMacro");
-
-                    b.ToTable("DocumentsTypeIerarchy");
                 });
 
             modelBuilder.Entity("Domain.Entities.Institution", b =>
@@ -480,6 +478,21 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("DocumentTypeDocumentType", b =>
+                {
+                    b.HasOne("Domain.Entities.DocumentType", null)
+                        .WithMany()
+                        .HasForeignKey("MacroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DocumentType", null)
+                        .WithMany()
+                        .HasForeignKey("MicroId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
                     b.HasOne("Domain.Entities.Institution", "Institution")
@@ -509,25 +522,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Institution");
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("Domain.Entities.DocumentTypeIerarchy", b =>
-                {
-                    b.HasOne("Domain.Entities.DocumentType", "Macro")
-                        .WithMany("DocumentsTypeIerarchyMacro")
-                        .HasForeignKey("IdMacro")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.DocumentType", "Micro")
-                        .WithMany("DocumentsTypeIerarchyMicro")
-                        .HasForeignKey("IdMicro")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Macro");
-
-                    b.Navigation("Micro");
                 });
 
             modelBuilder.Entity("Domain.Entities.Project", b =>
@@ -610,10 +604,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.DocumentType", b =>
                 {
                     b.Navigation("Documents");
-
-                    b.Navigation("DocumentsTypeIerarchyMacro");
-
-                    b.Navigation("DocumentsTypeIerarchyMicro");
                 });
 
             modelBuilder.Entity("Domain.Entities.Institution", b =>

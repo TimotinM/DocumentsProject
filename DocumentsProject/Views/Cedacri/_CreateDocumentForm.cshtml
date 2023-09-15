@@ -1,12 +1,12 @@
 ﻿@using Application.Documents.Commands.CreateDocument
 @model CreateDocumentDto
 
-<form class="bg-white" id="createUserForm" asp-antiforgery="true">
 
+<form class="bg-white" id="createDocumentForm" enctype="multipart/form-data" asp-antiforgery="true">
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="SavePath">File: </label>
         <div class="col-sm-9">
-            <input class=" form-control" asp-for="SavePath">
+            <input class=" form-control custom-file-input" asp-for="SavePath">
             <span class="text-danger" asp-validation-for="SavePath"></span>
         </div>
         <br>
@@ -30,7 +30,7 @@
     <div class="mb-3 row " id="macroSelect">
         <label class=" col-sm-3 form-label" asp-for="IdMacro">MACRO Type: </label>
         <div class="col-sm-9">
-            <select id="macroValue" class="form-select" asp-for="IdMacro">
+            <select id="macroValue" class="form-select" onchange="populateMicroSelect(this.value);" asp-for="IdMacro">
                 <option id="macroDefault" selected>--Select MACRO--</option>
                 @foreach (var item in ViewBag.Macro)
                 {
@@ -46,11 +46,7 @@
         <label class=" col-sm-3 form-label" asp-for="IdMacro">MICRO Type: </label>
         <div class="col-sm-9">
             <select id="microValue" class="form-select" asp-for="IdMicro">
-                <option id="microDefault" selected>--Select MICRO--</option>
-                @foreach (var item in ViewBag.Micro)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
+                <option id="macroDefault" selected>--Select MiCRO--</option>
             </select>
             <span class="text-danger" asp-validation-for="IdMicro"></span>
         </div>
@@ -93,7 +89,7 @@
 
     <div class="mb-3 row justify-content-end">
         <div class="col-sm-3">
-            <button type="button" onclick="" class="btn btn-primary float-sm-end">Submit</button>
+            <button type="button" onclick="createDocument()" class="btn btn-primary float-sm-end">Submit</button>
         </div>
         <div class="col-sm-2">
             <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>

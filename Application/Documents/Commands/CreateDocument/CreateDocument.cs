@@ -2,6 +2,8 @@
 using Application.Responses;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Application.Documents.Commands.CreateDocument
@@ -15,11 +17,13 @@ namespace Application.Documents.Commands.CreateDocument
     {
         private readonly IApplicationDbContext _context;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateDocumentCommandHandler(IApplicationDbContext context, IHostEnvironment hostEnvironment)
+        public CreateDocumentCommandHandler(IApplicationDbContext context, IHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
+            _userManager = userManager;
         }
 
         public IHostEnvironment HostEnvironment { get; }
@@ -38,12 +42,21 @@ namespace Application.Documents.Commands.CreateDocument
             }
             else
             {
+                var filePath = _hostEnvironment.ContentRootPath;
                 var bankName = _context.Institutions.Where(x => x.Id == request.DocumentDto.IdInstitution).Select(x => x.Name).FirstOrDefault();
                 var year = request.DocumentDto.GroupingDate.Year.ToString();
-                var month = request.DocumentDto.GroupingDate.Month.ToString();
+                var month = request.DocumentDto.GroupingDate.ToString("MMMM");
+
+                var pathList = new List<string>() { "Documents", bankName, year, month };
+                foreach (var path in pathList)
+                {
+                    filePath = Path.Combine(filePath, path);
+                    if (!Directory.Exists(filePath))
+                        Directory.CreateDirectory(filePath);
+                }
+
                 var documentName = request.DocumentDto.SavePath.FileName;
-                var destination = bankName + "/" + year + "/" + month + "/" + documentName;
-                var filePath = Path.Combine(_hostEnvironment.ContentRootPath, destination);
+                filePath = Path.Combine(filePath, documentName);             
 
                 await request.DocumentDto.SavePath.CopyToAsync(new FileStream(filePath, FileMode.Create));
 

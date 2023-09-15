@@ -2,11 +2,13 @@
 using Domain.Constants;
 using Domain.Entities;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Data;
 
@@ -92,14 +94,115 @@ public class ApplicationDbContextInitialiser
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
-            var test = await _userManager.CreateAsync(administrator, "@Admin1");           
+            await _userManager.CreateAsync(administrator, "@Admin1");           
             if (!string.IsNullOrWhiteSpace(administratorRole.Name))
             {
                 await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
             }
         }
 
-        // Default data
-        // Seed, if necessary     
+        if (_context.DocumentTypes.IsNullOrEmpty())
+        {
+
+            var service = new DocumentType()
+            {
+                Name = "Service",
+                IsMacro = true,
+                IsDateGrouped = true,
+            };
+            var sla = new DocumentType()
+            {
+                Name = "SLA",
+                IsMacro = true,
+                IsDateGrouped = true,
+            };
+            var project = new DocumentType()
+            {
+                Name = "Project",
+                IsMacro = true,
+                IsDateGrouped = true,
+            };
+            var network = new DocumentType()
+            {
+                Name = "Network",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { service }
+            };
+            var safety = new DocumentType()
+            {
+                Name = "Safety",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { service }
+            };
+            var change = new DocumentType()
+            {
+                Name = "Change",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { service }
+            };
+            var backup = new DocumentType()
+            {
+                Name = "Backup",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { service }
+            };
+            var analysis = new DocumentType()
+            {
+                Name = "Analysis",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { project }
+            };
+            var transition = new DocumentType()
+            {
+                Name = "Transition",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { project }
+            };
+            var production = new DocumentType()
+            {
+                Name = "Production",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { project }
+            };
+            var test = new DocumentType()
+            {
+                Name = "Test",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { project }
+            };
+            var monitoring = new DocumentType()
+            {
+                Name = "Monitoring",
+                IsMacro = false,
+                IsDateGrouped = true,
+                Macro = new List<DocumentType> { project }
+            };
+
+            service.Micro.Add(network);
+            service.Micro.Add(safety);
+            service.Micro.Add(change);
+            service.Micro.Add(backup);
+
+            project.Micro.Add(analysis);
+            project.Micro.Add(transition);
+            project.Micro.Add(production);
+            project.Micro.Add(test);
+            project.Micro.Add(monitoring);
+
+            await _context.DocumentTypes.AddRangeAsync(new List<DocumentType>()
+            {
+                service, sla, project, network, safety, change, backup, analysis, transition, production, test, monitoring
+            });
+
+            _context.SaveChanges();
+        }
     }
 }

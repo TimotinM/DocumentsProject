@@ -1,12 +1,11 @@
 ﻿using Domain.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
     public class Document : BaseAuditableEntity
     {
         public string Name { get; set; }
-        public string SavePath { get; set; }   
+        public string SavePath { get; set; }
         public DateTime UploadDate { get; set; }
         public string? AdditionalInfo { get; set; }
         public DateTime GroupingDate { get; set; }
