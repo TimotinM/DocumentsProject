@@ -1,0 +1,103 @@
+﻿@using Application.Documents.Commands.CreateDocument
+@model CreateDocumentDto
+
+<form class="bg-white" id="createUserForm" asp-antiforgery="true">
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="SavePath">File: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" asp-for="SavePath">
+            <span class="text-danger" asp-validation-for="SavePath"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="institutionSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
+        <div class="col-sm-9">
+            <select id="institutionValue" class="form-select" asp-for="IdInstitution">
+                <option id="institutionDefault" selected>--Select Institution--</option>
+                @foreach (var item in ViewBag.Institutions)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdInstitution"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="macroSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdMacro">MACRO Type: </label>
+        <div class="col-sm-9">
+            <select id="macroValue" class="form-select" asp-for="IdMacro">
+                <option id="macroDefault" selected>--Select MACRO--</option>
+                @foreach (var item in ViewBag.Macro)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdMacro"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="microSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdMacro">MICRO Type: </label>
+        <div class="col-sm-9">
+            <select id="microValue" class="form-select" asp-for="IdMicro">
+                <option id="microDefault" selected>--Select MICRO--</option>
+                @foreach (var item in ViewBag.Micro)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdMicro"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="projectSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdProject">Project: </label>
+        <div class="col-sm-9">
+            <select id="projectValue" class="form-select" asp-for="IdProject">
+                <option id="projectDefault" selected>--Select Project--</option>
+                @foreach (var item in ViewBag.Project)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdProject"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="GroupingDate">Grouping Date: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" asp-for="GroupingDate">
+            <span class="text-danger" asp-validation-for="GroupingDate"></span>
+        </div>
+        <br>
+    </div>
+
+    <label class="form-label" asp-for="AdditionalInfo">Additional Informations: </label>
+    <br>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-9">
+            <textarea class="form-control" type="text" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button type="button" onclick="" class="btn btn-primary float-sm-end">Submit</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

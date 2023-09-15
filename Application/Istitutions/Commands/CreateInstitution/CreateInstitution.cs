@@ -38,7 +38,7 @@ namespace Application.Istitutions.Commands.CreateInstitution
                     AdditionalInfo = request.InstitutionDto.AdditionalInfo,
                     Created = DateTime.Now
                 };
-                _context.Institutions.Add(entity);
+                await _context.Institutions.AddAsync(entity);
 
                 await _context.SaveChangesAsync(cancellationToken);
                 response.Success = true;
