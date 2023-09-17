@@ -3,7 +3,6 @@ using Application.Responses;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Application.Documents.Commands.CreateDocument
@@ -72,6 +71,12 @@ namespace Application.Documents.Commands.CreateDocument
                     Name = request.DocumentDto.SavePath.Name,
                     SavePath = filePath
                 };
+
+                var result = await _context.Documents.AddAsync(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                response.Success = true;
+                response.Message = "Document was created successful";
             }
             return response;
         }

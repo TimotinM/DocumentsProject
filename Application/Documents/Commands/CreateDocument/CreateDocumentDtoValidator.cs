@@ -21,7 +21,7 @@ namespace Application.Documents.Commands.CreateDocument
                 .WithMessage("Additional information must not exceed 1000 characters!");
 
             RuleFor(x => x.IdMacro)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Macro type can't be empty");
 
             RuleFor(x => x.IdMicro)

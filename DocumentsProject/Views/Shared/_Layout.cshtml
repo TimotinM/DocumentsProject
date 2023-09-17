@@ -78,8 +78,24 @@
             $(document).ready(function () {
                 goToAdminIndex();
             });
-        </script>                
-    }  
+        </script>
+    }
+    else if(User.IsInRole("CedacriOperator"))
+    {
+        <script type="application/javascript">
+            $(document).ready(function () {
+                goToCedacriIndex();
+            });
+        </script>
+    }
+    else if (User.IsInRole("BankOperator"))
+    {
+        <script type="application/javascript">
+            $(document).ready(function () {
+                goToBankIndex();
+            });
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
