@@ -1,0 +1,85 @@
+﻿@using Application.Users.Queris.GetUserDetails;
+@model UserDetailsDto
+
+<form class="bg-white" id="detailsUserForm"  asp-antiforgery="true">
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="UserName">Username: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" type="text" asp-for="UserName" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Email">Email: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="email" asp-for="Email" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Name">Name: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Name" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Surname">Surname: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Surname" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Patronymic">Patronymic: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Patronymic" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="roleSelectForm">
+        <label class=" col-sm-3 form-label" asp-for="UserRoles">Role: </label>
+        <div class="col-sm-9">
+            <select id="roleSelect" class="selectpicker" asp-for="UserRoles" multiple disabled>
+                <option value="Administrator"> Administrator </option>
+                <option value="CedacriOperator"> Cedacri Operator </option>
+                <option value="BankOperator"> Bank Operator </option>
+            </select>
+            <span class="text-danger" asp-validation-for="UserRoles"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="institutionSelect" hidden>
+        <label class=" col-sm-3 form-label" asp-for="Institution">Institution: </label>
+        <div class="col-sm-5">
+            <select id="institutionValue" class="form-select" asp-for="Institution" disabled>
+                    <option>@Model.Institution</option>
+            </select>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class="col-sm-3 form-check-label" asp-for="IsEnabled">Enabled: </label>
+        <div class="col-sm-9">
+            <div class=" form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" asp-for="IsEnabled" disabled>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</form>

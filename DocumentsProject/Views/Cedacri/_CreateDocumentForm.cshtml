@@ -16,7 +16,7 @@
         <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
         <div class="col-sm-9">
             <select id="institutionValue" class="form-select" asp-for="IdInstitution">
-                <option id="institutionDefault" selected>--Select Institution--</option>
+                <option id="institutionDefault" value="" disabled selected hidden>--Select Institution--</option>
                 @foreach (var item in ViewBag.Institutions)
                 {
                     <option value="@item.Id">@item.Name</option>
@@ -30,8 +30,8 @@
     <div class="mb-3 row " id="macroSelect">
         <label class=" col-sm-3 form-label" asp-for="IdMacro">MACRO Type: </label>
         <div class="col-sm-9">
-            <select id="macroValue" class="form-select" onchange="populateMicroSelect(this.value);" asp-for="IdMacro">
-                <option id="macroDefault" selected>--Select MACRO--</option>
+            <select id="macroValue" class="form-select" onchange="macroChange(this);" asp-for="IdMacro">
+                <option id="macroDefault" value="" disabled selected hidden>--Select MACRO--</option>
                 @foreach (var item in ViewBag.Macro)
                 {
                     <option value="@item.Id">@item.Name</option>
@@ -46,18 +46,18 @@
         <label class=" col-sm-3 form-label" asp-for="IdMacro">MICRO Type: </label>
         <div class="col-sm-9">
             <select id="microValue" class="form-select" asp-for="IdMicro">
-                <option id="macroDefault" selected>--Select MiCRO--</option>
+                <option id="macroDefault" value="" disabled selected hidden>--Select MiCRO--</option>
             </select>
             <span class="text-danger" asp-validation-for="IdMicro"></span>
         </div>
         <br>
     </div>
 
-    <div class="mb-3 row " id="projectSelect">
+    <div class="mb-3 row " id="projectSelect" hidden>
         <label class=" col-sm-3 form-label" asp-for="IdProject">Project: </label>
         <div class="col-sm-9">
             <select id="projectValue" class="form-select" asp-for="IdProject">
-                <option id="projectDefault" selected>--Select Project--</option>
+                <option id="projectDefault" value="" disabled selected hidden>--Select Project--</option>
                 @foreach (var item in ViewBag.Project)
                 {
                     <option value="@item.Id">@item.Name</option>

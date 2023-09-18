@@ -46,9 +46,9 @@ namespace Application.Users.Conmmand.CreateUser
                 user.Surname = request.UserDto.Surname;
                 user.Patronymic = request.UserDto.Patronymic;
                 user.IdInstitution = request.UserDto.IdInstitution;
+                user.IsEnabled = true;
                 var result = await _userManager.CreateAsync(user, request.UserDto.Password);
                 await _userManager.AddToRolesAsync(user, request.UserDto.UserRoles);
-                await _userManager.AddClaimAsync(user, new Claim("UserFullName", user.Name + " " + user.Surname));
 
                 response.Success = true;
                 response.Message = "Institution was created successful";

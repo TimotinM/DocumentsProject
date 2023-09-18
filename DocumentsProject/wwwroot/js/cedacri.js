@@ -53,3 +53,21 @@ function populateMicroSelect(id) {
         }
     });
 }
+
+function macroChange(element) {
+    populateMicroSelect(element.value);
+    renderProjectSelect(element)
+}
+
+function renderProjectSelect(element) {
+    var text = element.options[element.selectedIndex].text;
+
+    if (text == "SLA") {
+        document.getElementById("projectSelect").hidden = false;
+    }
+    else {
+        console.log(text);
+        document.getElementById("projectValue")[0].selected = true;
+        document.getElementById("projectSelect").hidden = true;
+    }
+}

@@ -6,6 +6,7 @@ using Application.Users.Conmmand.ChangeUserPassword;
 using Application.Users.Conmmand.CreateUser;
 using Application.Users.Conmmand.UpdateUser;
 using Application.Users.Queris;
+using Application.Users.Queris.GetUserDetails;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -92,11 +93,21 @@ namespace DocumentsProject.Controllers
             return response;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseCommandResponse>> UpdateUserEnabled(int id)
+        [HttpGet]
+        public async Task<ActionResult> GetUserEdit(int id)
         {
-            var command = new UpdateUserEnabledCommand() { Id = id };
-            var response = await _mediator.Send(command);
+            var model = await _mediator.Send(new GetUserByIdRequest { Id = id });
+            var institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
+            ViewBag.Institutions = institutions;
+            return PartialView("_EditUserForm", model);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateUser(int userId, [FromForm] UpdateUserDto request)
+        {
+            request.Id = userId;
+            var response = await _mediator.Send(new UpdateUserCommand() { User = request});
             return Ok(response);
         }
 
@@ -111,6 +122,13 @@ namespace DocumentsProject.Controllers
                 return BadRequest(response.Errors);
             return Ok(response);
         }
-     
+
+        [HttpGet]
+        public async Task<ActionResult> GetUserDetails(int id)
+        {
+            var model = await _mediator.Send(new GetUserDetailsRequest { Id = id });
+            return PartialView("_UserDetailsForm", model);
+        }
+
     }
 }

@@ -34,14 +34,19 @@ function createUser() {
     }
 }
 
-function changeUserEnable(userId) {
+function updateUser() {
+    var form = $("#updateUserForm");
+    var url = form.attr('action');
     $.ajax({
-        url: "/Admin/UpdateUserEnabled",
-        data: {
-            id: userId
+        url: url,
+        xhrFields: {
+            withCredentials: true
         },
+        data: form.serialize(),
         method: "POST",
         success: function (response) {
+            $('#modalContainer').modal('toggle');
+            $("#updateUserForm")[0].reset();
             $('#usersDatatable').DataTable().ajax.reload();
         }
     });
@@ -101,6 +106,57 @@ function loadCreateUserForm() {
             $("form").removeData("unobtrusiveValidation");
             $.validator.unobtrusive.parse("form");
         }
+    });
+}
+
+function loadEditUserForm(userId) {
+    $.ajax({
+        url: "/Admin/GetUserEdit",
+        method: "GET",
+        data: {
+            id: userId
+        },
+        success: function (response) {
+            $('#modalTitle').html(null)
+            $('#modalTitle').html("Edit User")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $('#roleSelect').multiselect({
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle btn btn-light" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+                },
+            });
+            renderInstitutionSelect(document.getElementById("roleSelect").value);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+            $('#modalContainer').modal('toggle');
+        }
+            
+    });
+}
+
+function loadUserDetails(userId) {
+    $.ajax({
+        url: "/Admin/GetUserDetails",
+        method: "GET",
+        data: {
+            id: userId
+        },
+        success: function (response) {
+            $('#modalTitle').html(null)
+            $('#modalTitle').html("User Details")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $('#roleSelect').multiselect({
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle btn btn-light" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+                },
+            });
+            renderInstitutionSelect(document.getElementById("roleSelect").value);
+            $('#modalContainer').modal('toggle');
+        }
+
     });
 }
 
@@ -198,11 +254,14 @@ function loadUsersTable() {
         callback: function (key, options) {
             let row = table.row(options.$trigger);
             switch (key) {
-                case 'enabled':
-                    changeUserEnable(row.data()["id"]);
+                case 'edit':
+                    loadEditUserForm(row.data()["id"]);
                     break;
                 case 'changePassword':
                     loadChangeUserPasswordForm(row.data()["id"]);
+                    break;
+                case 'details':
+                    loadUserDetails(row.data()["id"]);
                     break;
                 default:
                     break
@@ -210,7 +269,8 @@ function loadUsersTable() {
         },
         items: {           
             "changePassword": { name: "Change Password" },
-            "enabled": { name: "Enable/Disable" },
+            "edit": { name: "Edit" },
+            "details": { name: "Details" }
         }
     });
 }
