@@ -13,6 +13,14 @@
     {
       "library": "bootstrap-multiselect@1.1.2",
       "destination": "wwwroot/lib/bootstrap-multiselect/"
+    },
+    {
+      "library": "bootstrap-datetimepicker@6.7.13",
+      "destination": "wwwroot/lib/bootstrap-datetimepicker/"
+    },
+    {
+      "library": "jstree@3.3.15",
+      "destination": "wwwroot/lib/jstree/"
     }
   ]
 }

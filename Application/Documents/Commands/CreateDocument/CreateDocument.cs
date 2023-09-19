@@ -68,7 +68,7 @@ namespace Application.Documents.Commands.CreateDocument
                     AdditionalInfo = request.DocumentDto.AdditionalInfo,
                     UploadDate = DateTime.Now,
                     GroupingDate = request.DocumentDto.GroupingDate,
-                    Name = request.DocumentDto.SavePath.Name,
+                    Name = request.DocumentDto.SavePath.FileName,
                     SavePath = filePath
                 };
 

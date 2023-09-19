@@ -18,6 +18,8 @@ function goToCedacriIndex() {
         success: function (response) {
             $('#contentDiv').html(null);
             $('#contentDiv').html(response);
+            generateDocumentsTree(); 
+            loadDocumentsTable();
         }
     });
 }

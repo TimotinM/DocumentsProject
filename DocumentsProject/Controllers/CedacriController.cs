@@ -1,10 +1,16 @@
 ﻿using Application.Documents.Commands.CreateDocument;
+using Application.Documents.Queries.GetDocumentsTable;
+using Application.Documents.Queries.GetDocumentsTree;
 using Application.Documents.Queries.GetDocumentTypeList;
 using Application.Istitutions.Queries.GetInstitutionDropDownList;
+using Application.Projects.Commands.CreateProject;
+using Application.Projects.Queries.GetProjectDropDownList;
 using Application.Responses;
+using Application.Responses.JsTree.DocumentsTree;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.Application.TableParameters;
 using System.Security.Claims;
 
 namespace DocumentsProject.Controllers
@@ -30,7 +36,7 @@ namespace DocumentsProject.Controllers
         public async Task<ActionResult> GetCreateDocumentAsync()
         {
             ViewBag.Macro = await _mediator.Send(new GetDocumentsTypeDropDownListRequest() { IsMacro = true });
-            ViewBag.Project = await _mediator.Send(new GetDocumentsTypeDropDownListRequest() { IsMacro = false });
+            ViewBag.Project = await _mediator.Send(new GetProjectDropDownListRequest());
             ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
             return PartialView("_CreateDocumentForm");
         }
@@ -46,11 +52,42 @@ namespace DocumentsProject.Controllers
         public async Task<ActionResult<BaseCommandResponse>> CreateDocument([FromForm] CreateDocumentDto request)
         {
             request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var command = new CreateDocumentCommand() { DocumentDto = request };
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(new CreateDocumentCommand() { DocumentDto = request });
 
             if (!response.Success)
                 return BadRequest(response.Errors);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCreateProject()
+        {
+            ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
+            return PartialView("_CreateProjectForm");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BaseCommandResponse>> CreateProject([FromForm] CreateProjectDto request)
+        {
+            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var response = await _mediator.Send(new CreateProjectCommand() { Project = request });
+
+            if (!response.Success)
+                return BadRequest(response.Errors);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Institution>>> GetDocumentsTree()
+        {
+            var response = await _mediator.Send(new GetDocumentsTreeRequest());
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetDocumentsTable(DataTablesParameters parameters = null)
+        {
+            var response = await _mediator.Send(new GetDocumentsTableRequest() { Parameters = parameters });
             return Ok(response);
         }
     }
