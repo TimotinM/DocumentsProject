@@ -32,7 +32,7 @@ namespace Application.Documents.Queries.GetDocumentsTree
                         {
                             Text = yearGroup.Key.ToString(),
                             Children = yearGroup
-                            .GroupBy(t => t.DocumentType.Macro.FirstOrDefault().Name)
+                            .GroupBy(t =>t.DocumentType.IsMacro ? t.DocumentType.Name : t.DocumentType.Macro.FirstOrDefault().Name)
                                 .Select(t => new MacroType()
                                 {
                                     Text = t.Key.ToString(),                                   

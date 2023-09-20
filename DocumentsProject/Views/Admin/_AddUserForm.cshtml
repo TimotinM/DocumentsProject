@@ -2,6 +2,10 @@
 @model CreateUserDto
 
 <form class="bg-white" id="createUserForm" asp-antiforgery="true">
+
+    <div id="createUserErrors" class="alert alert-danger" hidden>
+    </div>
+
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="UserName">Username: </label>
         <div class="col-sm-9">

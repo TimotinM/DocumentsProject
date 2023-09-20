@@ -108,6 +108,8 @@ namespace DocumentsProject.Controllers
         {
             request.Id = userId;
             var response = await _mediator.Send(new UpdateUserCommand() { User = request});
+            if (!response.Success)
+                return BadRequest(response.Errors);
             return Ok(response);
         }
 

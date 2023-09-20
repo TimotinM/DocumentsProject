@@ -21,6 +21,10 @@
     {
       "library": "jstree@3.3.15",
       "destination": "wwwroot/lib/jstree/"
+    },
+    {
+      "library": "jqueryui@1.13.2",
+      "destination": "wwwroot/lib/jqueryui/"
     }
   ]
 }

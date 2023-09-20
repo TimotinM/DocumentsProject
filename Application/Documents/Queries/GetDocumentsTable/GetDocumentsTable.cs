@@ -4,6 +4,7 @@ using Application.Responses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.TableParameters;
+using System.Text.RegularExpressions;
 
 namespace Application.Documents.Queries.GetDocumentsTable
 {
@@ -21,8 +22,8 @@ namespace Application.Documents.Queries.GetDocumentsTable
         }
         public async Task<DataTablesResponse<DocumentsTableDto>> Handle(GetDocumentsTableRequest request, CancellationToken cancellationToken)
         {
-            var orderColumn = request.Parameters.Columns[request.Parameters.Order[0].Column].Name == "type" ? "documenttype" : request.Parameters.Columns[request.Parameters.Order[0].Column].Name;
-            var toFind = request.Parameters.Search.Value ?? "";
+            var orderColumn = request.Parameters.Columns[request.Parameters.Order[0].Column].Name;
+            var toFind = request.Parameters.Search.Value ?? "";          
 
             var result = await _context.Documents
                 .Include(x => x.Institution)
@@ -32,18 +33,19 @@ namespace Application.Documents.Queries.GetDocumentsTable
                     || x.DocumentType.Name.Contains(toFind)
                     || x.DocumentType.Macro.FirstOrDefault().Name.Contains(toFind)
                     || x.Institution.Name.Contains(toFind)
-                    || x.Project.Name.Contains(toFind))
+                    || x.Project.Name.Contains(toFind)
+                    || x.GroupingDate.Year.ToString().Contains(toFind))
                 .OrderByExtension(orderColumn, request.Parameters.Order[0].Dir)
                 .Skip(request.Parameters.Start)
                 .Take(request.Parameters.Length)
                 .Select(x => new DocumentsTableDto()
                 {
                     Name = x.Name,
-                    Type = x.DocumentType.IsMacro ?
+                    DocumentType = x.DocumentType.IsMacro ?
                            x.DocumentType.Name :
                            x.DocumentType.Macro.FirstOrDefault().Name + "/" + x.DocumentType.Name,
                     Institution = x.Institution.Name,
-                    Date = x.GroupingDate,
+                    GroupingDate = x.GroupingDate,
                     Project = x.Project.Name
                 })
                 .ToListAsync();
@@ -56,7 +58,8 @@ namespace Application.Documents.Queries.GetDocumentsTable
                     || x.DocumentType.Name.Contains(toFind)
                     || x.DocumentType.Macro.FirstOrDefault().Name.Contains(toFind)
                     || x.Institution.Name.Contains(toFind)
-                    || x.Project.Name.Contains(toFind))
+                    || x.Project.Name.Contains(toFind)
+                    || x.GroupingDate.Year.ToString().Contains(toFind))
                 .CountAsync();
 
             var response = new DataTablesResponse<DocumentsTableDto>()

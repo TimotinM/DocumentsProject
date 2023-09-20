@@ -2,6 +2,10 @@
 @model CreateProjectDto
 
 <form class="bg-white" id="createProjectForm" asp-antiforgery="true">
+
+    <div id="createProjectErrors" class="alert alert-danger" hidden>
+    </div>
+
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="Name">Name: </label>
         <div class="col-sm-9">
@@ -29,7 +33,7 @@
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="DateFrom">Date From: </label>
         <div class="col-sm-9">
-            <input class="form-control" type="date" asp-for="DateFrom">
+            <input class="form-control" id="dateFrom" onchange="configureDatePicker()" type="date" asp-for="DateFrom">
             <span class="text-danger" asp-validation-for="DateFrom"></span>
         </div>
         <br>
@@ -38,7 +42,7 @@
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="DateFrom">Date Till: </label>
         <div class="col-sm-9">
-            <input class="form-control" type="date" asp-for="DateTill">
+            <input class="form-control" id="dateTill" type="date" asp-for="DateTill" onfocus="blur" disabled>
             <span class="text-danger" asp-validation-for="DateTill"></span>
         </div>
         <br>

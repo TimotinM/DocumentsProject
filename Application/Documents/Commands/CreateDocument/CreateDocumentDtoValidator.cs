@@ -26,8 +26,8 @@ namespace Application.Documents.Commands.CreateDocument
 
             RuleFor(x => x.IdMicro)
                 .NotEmpty()
-                .When(x => x.IdMacro.Equals(GetSLAId()))
-                .WithMessage("Macro type is required");
+                .WhenAsync(async (doc, cancellation) => doc.IdMacro != await GetSLATypeId())
+                .WithMessage("Micro type is required");
 
             RuleFor(x => x.IdInstitution)
                 .NotEmpty()
@@ -35,19 +35,19 @@ namespace Application.Documents.Commands.CreateDocument
 
             RuleFor(x => x.IdProject)
                 .NotEmpty()
-                .When(x => x.IdMacro.Equals(GetDesignId()))
-                .WithMessage("Design is required");
+                .WhenAsync(async (doc, cancellation) => doc.IdMacro == await GetProjectTypeId())
+                .WithMessage("Project is required");
 
         }
 
-        private async Task<int> GetSLAId()
+        private async Task<int> GetSLATypeId()
         {
             return await _context.DocumentTypes.Where(x => x.Name == "SLA").Select(x => x.Id).FirstOrDefaultAsync();
         }
 
-        private async Task<int> GetDesignId()
+        private async Task<int> GetProjectTypeId()
         {
-            return await _context.DocumentTypes.Where(x => x.Name == "Design").Select(x => x.Id).FirstOrDefaultAsync();
+            return await _context.DocumentTypes.Where(x => x.Name == "Project").Select(x => x.Id).FirstOrDefaultAsync();
         }
     }
 }

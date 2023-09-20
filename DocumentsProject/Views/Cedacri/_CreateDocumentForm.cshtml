@@ -1,8 +1,15 @@
 ﻿@using Application.Documents.Commands.CreateDocument
 @model CreateDocumentDto
-
+@{
+    Layout = null;
+}
 
 <form class="bg-white" id="createDocumentForm" enctype="multipart/form-data" asp-antiforgery="true">
+
+    <div id="createDocumentErrors" class="alert alert-danger" hidden>
+
+    </div>
+
     <div class="mb-3 row">
         <label class=" col-sm-3 form-label" asp-for="SavePath">File: </label>
         <div class="col-sm-9">
@@ -42,11 +49,11 @@
         <br>
     </div>
 
-    <div class="mb-3 row " id="microSelect">
+    <div class="mb-3 row " id="microSelect" hidden>
         <label class=" col-sm-3 form-label" asp-for="IdMacro">MICRO Type: </label>
         <div class="col-sm-9">
             <select id="microValue" class="form-select" asp-for="IdMicro">
-                <option id="macroDefault" value="" disabled selected hidden>--Select MiCRO--</option>
+                <option id="microDefault" value="" disabled selected hidden>--Select MiCRO--</option>
             </select>
             <span class="text-danger" asp-validation-for="IdMicro"></span>
         </div>

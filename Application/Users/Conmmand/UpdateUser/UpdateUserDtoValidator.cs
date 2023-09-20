@@ -33,6 +33,8 @@ namespace Application.Users.Conmmand.UpdateUser
                 .WithMessage("Username is required")
                 .Matches(@"^[0-9a-zA-Z ]+$")
                 .WithMessage("Only numbers and letters are alowed")
+                .MustAsync(async (userDto, user, cancellation) => await IsUsernameUniqueAsync(user, userDto.Id))
+                .WithMessage("Username already taken")
                 .MaximumLength(32)
                 .WithMessage("Username must be at most 32 characters long");
 
@@ -49,6 +51,12 @@ namespace Application.Users.Conmmand.UpdateUser
         private async Task<bool> IsEmailUniqueAsync(string email, int userId)
         {
             var user = await _userManager.FindByEmailAsync(email);
+            return (user != null && user.Id == userId) || user == null;
+        }
+
+        private async Task<bool> IsUsernameUniqueAsync(string username, int userId)
+        {
+            var user = await _userManager.FindByNameAsync(username);
             return (user != null && user.Id == userId) || user == null;
         }
     }

@@ -37,11 +37,12 @@ function loadDocumentsTable() {
             "type": "POST",
             "datatype": "json"
         },
+        "dateFormat": "yy-mm-dd",
         "columns": [
             { "data": "id", title: "Id", name: "id", visible: false },
             { "data": "name", "title": "Name", "name": "name", "autoWidth": true },
-            { "data": "type", "title": "Type", "name": "type", "autoWidth": true },
-            { "data": "date", "title": "Date", "name": "date", "autoWidth": true },
+            { "data": "documentType", "title": "Type", "name": "documentType", "autoWidth": true },
+            { "data": "formattedGroupingDate", "title": "Date", "name": "groupingDate", "autoWidth": true },
             { "data": "institution", "title": "Institution", "name": "institution", "autoWidth": true },
             { "data": "project", "title": "Project", "name": "project", "autoWidth": true },
         ]
@@ -71,36 +72,49 @@ function loadDocumentsTable() {
 function createDocument() {
     var form = $("#createDocumentForm")[0];
     var formData = new FormData(form);
-
-    $.ajax({
-        url: "/Cedacri/CreateDocument",
-        data: formData,
-        method: "POST",
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            $('#modalContainer').modal('toggle');
-            $('#documentsDatatable').DataTable().ajax.reload();
-        },
-        error: function (response) {
-            console.log(response);
-        }
-    });
+    if ($("#createDocumentForm").valid()) {
+        $.ajax({
+            url: "/Cedacri/CreateDocument",
+            data: formData,
+            method: "POST",
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $('#documentsDatatable').DataTable().ajax.reload();
+            },
+            error: function (response) {
+                var errorDiv = $("#createDocumentErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("createDocumentErrors").hidden = false;
+            }
+        });
+    }
 }
 
 function createProject() {
     var form = $("#createProjectForm");
-    $.ajax({
-        url: "/Cedacri/CreateProject",
-        data: form.serialize(),
-        method: "POST",
-        success: function (response) {
-            $('#modalContainer').modal('toggle');
-        },
-        error: function (response) {
-            console.log(response);
-        }
-    });
+    if (form.valid()) {
+        $.ajax({
+            url: "/Cedacri/CreateProject",
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+            },
+            error: function (response) {
+                var errorDiv = $("#createProjectErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("createProjectErrors").hidden = false;
+            }
+        });
+    }
 }
 
 function populateMicroSelect(id) {
@@ -126,19 +140,42 @@ function populateMicroSelect(id) {
 
 function macroChange(element) {
     populateMicroSelect(element.value);
-    renderProjectSelect(element)
+    renderProjectSelect(element);
+    renderMicroSelect(element);
 }
 
 function renderProjectSelect(element) {
     var text = element.options[element.selectedIndex].text;
 
-    if (text == "SLA") {
+    if (text == "Project") {
         document.getElementById("projectSelect").hidden = false;
     }
     else {
-        console.log(text);
         document.getElementById("projectValue")[0].selected = true;
         document.getElementById("projectSelect").hidden = true;
+    }
+}
+
+function configureDatePicker() {
+    var dateFromInput = document.getElementById("dateFrom");
+    var dateTillInput = document.getElementById("dateTill");
+    var dateFromValue = new Date(dateFromInput.value);
+    var nextDay = new Date(dateFromValue);
+    nextDay.setDate(nextDay.getDate() + 1);
+    dateTillInput.setAttribute("min", nextDay.toISOString().split("T")[0]);
+    dateTillInput.disabled = false;
+
+}
+
+function renderMicroSelect(element) {
+    var text = element.options[element.selectedIndex].text;
+
+    if (text == "SLA") {
+        document.getElementById("microValue")[0].selected = true;
+        document.getElementById("microSelect").hidden = true;
+    }
+    else {
+        document.getElementById("microSelect").hidden = false;
     }
 }
 
@@ -155,22 +192,17 @@ function generateDocumentsTree() {
             });
 
             $('#doctree').on('changed.jstree', function (e, data) {
+                var table = $('#documentsDatatable').DataTable();
                 var selectedNode = data.instance.get_node(data.selected[0]);
-                var selectedNodeData = selectedNode.data; // Obțineți datele nodului selectat
-
-                // Colectați datele de la toate nodurile părinți
-                var parentNodes = [];
+                console.log(selectedNode.original.column)
+                table.column(selectedNode.original.column).search(selectedNode.original.text)
                 var currentNode = selectedNode;
                 while (currentNode.parent !== '#') {
                     var parentNode = data.instance.get_node(currentNode.parent);
-                    parentNodes.push(parentNode.data);
+                    table.column(selectedNode.original.column).search(selectedNode.original.text)
                     currentNode = parentNode;
                 }
-
-                // Acum aveți datele de la toate nodurile părinți în parentNodes
-                console.log('Date de la nodurile părinți:', parentNodes);
-
-                // Puteți utiliza datele de la nodurile părinți și de la nodul selectat după cum doriți
+                table.draw();
             });
         }
     });

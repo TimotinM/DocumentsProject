@@ -33,12 +33,12 @@ namespace DocumentsProject.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCreateDocumentAsync()
+        public async Task<ActionResult> GetCreateDocument()
         {
             ViewBag.Macro = await _mediator.Send(new GetDocumentsTypeDropDownListRequest() { IsMacro = true });
             ViewBag.Project = await _mediator.Send(new GetProjectDropDownListRequest());
             ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
-            return PartialView("_CreateDocumentForm");
+            return View("_CreateDocumentForm");
         }
 
         [HttpGet] 

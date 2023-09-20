@@ -47,6 +47,8 @@ namespace Application.Users.Conmmand.CreateUser
                 .WithMessage("Username is required")
                 .Matches(@"^[0-9a-zA-Z ]+$")
                 .WithMessage("Only numbers and letters are alowed")
+                .MustAsync(async (user, cancellation) => await IsUsernameUniqueAsync(user))
+                .WithMessage("Username already taken")
                 .MaximumLength(32)
                 .WithMessage("Username must be at most 32 characters long");
 
@@ -63,6 +65,12 @@ namespace Application.Users.Conmmand.CreateUser
         private async Task<bool> IsEmailUniqueAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+            return user == null;
+        }
+
+        private async Task<bool> IsUsernameUniqueAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
             return user == null;
         }
     }

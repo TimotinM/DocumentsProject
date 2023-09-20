@@ -28,7 +28,12 @@ function createUser() {
                 $('#usersDatatable').DataTable().ajax.reload();
             },
             error: function (response) {
-                alert(response.responseText);
+                var errorDiv = $("#createUserErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("createUserErrors").hidden = false;
             }
         });
     }
@@ -48,6 +53,14 @@ function updateUser() {
             $('#modalContainer').modal('toggle');
             $("#updateUserForm")[0].reset();
             $('#usersDatatable').DataTable().ajax.reload();
+        },
+        error: function (response) {
+            var errorDiv = $("#editUserErrors");
+            errorDiv.empty();
+            $.each(response.responseJSON, function (key, value) {
+                errorDiv.append("<p>" + value + "</p>");
+            });
+            document.getElementById("editUserErrors").hidden = false;
         }
     });
 }

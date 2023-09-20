@@ -20,7 +20,9 @@ namespace Application.Projects.Commands.CreateProject
 
             RuleFor(x => x.DateTill)
                 .NotEmpty()
-                .WithMessage("End date is required");
+                .WithMessage("End date is required")
+                .Must((dto, dateTill) => dateTill > dto.DateFrom)
+                .WithMessage("End date must be greater than Start date"); ;
 
             RuleFor(x => x.AdditionalInfo)
                 .MaximumLength(1000)

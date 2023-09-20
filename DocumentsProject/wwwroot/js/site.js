@@ -19,7 +19,7 @@ function goToCedacriIndex() {
             $('#contentDiv').html(null);
             $('#contentDiv').html(response);
             generateDocumentsTree(); 
-            loadDocumentsTable();
+            loadDocumentsTable();          
         }
     });
 }
