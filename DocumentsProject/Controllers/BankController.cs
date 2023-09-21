@@ -1,8 +1,9 @@
 ﻿using Application.Documents.Queries.BankOperator.GetDocumentDetails;
 using Application.Documents.Queries.BankOperator.GetFileById;
+using Application.Documents.Queries.BankOperator.GetProjectReportDocuments;
 using Application.Documents.Queries.BankOperator.GetServiceReportDocuments;
+using Application.Documents.Queries.BankOperator.GetSLAReportDocuments;
 using Application.Responses.JsTree;
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,22 @@ namespace DocumentsProject.Controllers
         {
             var userId = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new GetServiceReportTreeRequest() { IdUser = userId});
+            return response;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<JsTree>>> GetSLAReportDocuments()
+        {
+            var userId = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var response = await _mediator.Send(new GetSLAReportTreeRequest() { IdUser = userId });
+            return response;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<JsTree>>> GetProjectReportDocuments()
+        {
+            var userId = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var response = await _mediator.Send(new GetProjectReportTreeRequest() { IdUser = userId });
             return response;
         }
 

@@ -45,6 +45,100 @@
     });
 }
 
+function generateSLAReport() {
+    $.ajax({
+        url: "/Bank/GetSLAReportDocuments",
+        method: "GET",
+        success: function (data) {
+            data.forEach(function (item) {
+
+                if (item.children && item.children.length > 0) {
+                    var treeId = 'slaReport_' + item.text;
+                    var container = $('<div>').addClass('col-md-4 bg-secondary rounded').appendTo('#slaReportContainer');
+                    var hElement = $('<h3>').text(item.text).addClass('d-flex justify-content-center text-white').appendTo(container);
+                    $('<div>').attr('id', treeId).appendTo('#slaReportContainer');
+
+                    $('#' + treeId).jstree({
+                        'core': {
+                            'data': item.children
+                        },
+                        'plugins': ['contextmenu'],
+                        'contextmenu': {
+                            'items': function (node) {
+                                if (node.children.length === 0) {
+                                    var contextMenuItems = {
+                                        'download': {
+                                            'label': 'Download',
+                                            'action': function () {
+                                                downloadFile(node.original.value, node.original.text);
+                                            }
+                                        },
+                                        'info': {
+                                            'label': 'Info',
+                                            'action': function () {
+                                                loadDocumentDetails(node.original.value);
+                                            }
+                                        }
+                                    };
+                                    return contextMenuItems;
+                                }
+                                return {};
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function generateProjectReport() {
+    $.ajax({
+        url: "/Bank/GetProjectReportDocuments",
+        method: "GET",
+        success: function (data) {
+            data.forEach(function (item) {
+
+                if (item.children && item.children.length > 0) {
+                    var treeId = 'projectReport_' + item.text.replace(/\s/g, '');
+                    var container = $('<div>').addClass('col-md-4 bg-secondary rounded').appendTo('#projectReportContainer');
+                    var hElement = $('<h3>').text(item.text).addClass('d-flex justify-content-center text-white').appendTo(container);
+                    $('<div>').attr('id', treeId).appendTo('#projectReportContainer');
+
+                    $('#' + treeId).jstree({
+                        'core': {
+                            'data': item.children
+                        },
+                        'plugins': ['contextmenu'],
+                        'contextmenu': {
+                            'items': function (node) {
+                                if (node.children.length === 0) {
+                                    var contextMenuItems = {
+                                        'download': {
+                                            'label': 'Download',
+                                            'action': function () {
+                                                downloadFile(node.original.value, node.original.text);
+                                            }
+                                        },
+                                        'info': {
+                                            'label': 'Info',
+                                            'action': function () {
+                                                loadDocumentDetails(node.original.value);
+                                            }
+                                        }
+                                    };
+                                    return contextMenuItems;
+                                }
+                                return {};
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 function downloadFile(id, name) {
     $.ajax({
         url: "/Bank/GetFileById",

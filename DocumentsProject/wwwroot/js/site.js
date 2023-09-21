@@ -34,6 +34,8 @@ function goToBankIndex() {
             $('#contentDiv').html(null);
             $('#contentDiv').html(response);
             generateServiceReport();
+            generateSLAReport();
+            generateProjectReport();
         }
     });
 }
