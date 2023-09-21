@@ -1,12 +1,15 @@
 ﻿using Application.Documents.Commands.CreateDocument;
+using Application.Documents.Queries.BankOperator.GetServiceReportDocuments;
 using Application.Documents.Queries.GetDocumentsTable;
 using Application.Documents.Queries.GetDocumentsTree;
 using Application.Documents.Queries.GetDocumentTypeList;
 using Application.Istitutions.Queries.GetInstitutionDropDownList;
 using Application.Projects.Commands.CreateProject;
 using Application.Projects.Queries.GetProjectDropDownList;
+using Application.Projects.Queries.GetProjectsTable;
+using Application.Projects.Queries.GetProjectsTree;
 using Application.Responses;
-using Application.Responses.JsTree.DocumentsTree;
+using Application.Responses.JsTree;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +44,20 @@ namespace DocumentsProject.Controllers
             return View("_CreateDocumentForm");
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<JsTree>>> GetDocumentsTree()
+        {
+            var response = await _mediator.Send(new GetDocumentsTreeRequest());
+            return response;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetDocumentsTable(DataTablesParameters parameters = null)
+        {
+            var response = await _mediator.Send(new GetDocumentsTableRequest() { Parameters = parameters });
+            return Ok(response);
+        }
+
         [HttpGet] 
         public async Task<ActionResult> GetDocumentsTypeMicro(int macroId)
         {
@@ -66,6 +83,20 @@ namespace DocumentsProject.Controllers
             return PartialView("_CreateProjectForm");
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<JsTree>>> GetProjectsTree()
+        {
+            var response = await _mediator.Send(new GetProjectsTreeRequest());
+            return response;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetProjectsTable(DataTablesParameters parameters = null)
+        {
+            var response = await _mediator.Send(new GetProjectsTableRequest() { Parameters = parameters });
+            return Ok(response);    
+        }
+
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> CreateProject([FromForm] CreateProjectDto request)
         {
@@ -77,18 +108,5 @@ namespace DocumentsProject.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Institution>>> GetDocumentsTree()
-        {
-            var response = await _mediator.Send(new GetDocumentsTreeRequest());
-            return Ok(response);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> GetDocumentsTable(DataTablesParameters parameters = null)
-        {
-            var response = await _mediator.Send(new GetDocumentsTableRequest() { Parameters = parameters });
-            return Ok(response);
-        }
     }
 }

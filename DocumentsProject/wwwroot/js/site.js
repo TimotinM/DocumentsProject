@@ -19,7 +19,9 @@ function goToCedacriIndex() {
             $('#contentDiv').html(null);
             $('#contentDiv').html(response);
             generateDocumentsTree(); 
-            loadDocumentsTable();          
+            loadDocumentsTable();
+            generateProjectsTree();
+            loadProjectsTable();
         }
     });
 }
@@ -31,6 +33,7 @@ function goToBankIndex() {
         success: function (response) {
             $('#contentDiv').html(null);
             $('#contentDiv').html(response);
+            generateServiceReport();
         }
     });
 }

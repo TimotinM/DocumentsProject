@@ -26,10 +26,14 @@ namespace Application.Istitutions.Queries.GetInstitutionsTable
             var orderColumn = request.Parameters.Columns[request.Parameters.Order[0].Column].Name;
             var toFind = request.Parameters.Search.Value ?? "";
 
-            var result = await _context.Institutions
+            var query = _context.Institutions
                 .Where(x => x.Name.Contains(toFind)
                     || x.InstCode.Contains(toFind)
-                    || x.AdditionalInfo.Contains(toFind))
+                    || x.AdditionalInfo.Contains(toFind));
+
+            var total = await query.CountAsync();
+
+            var result = await query
                 .OrderByExtension(orderColumn, request.Parameters.Order[0].Dir)
                 .Skip(request.Parameters.Start)
                 .Take(request.Parameters.Length)
@@ -40,12 +44,6 @@ namespace Application.Istitutions.Queries.GetInstitutionsTable
                     AdditionalInfo = x.AdditionalInfo
                 })
                 .ToListAsync();
-
-            var total = await _context.Institutions
-                .Where(x => x.Name.Contains(toFind)
-                    || x.InstCode.Contains(toFind)
-                    || x.AdditionalInfo.Contains(toFind))
-                .CountAsync();
 
             var response = new DataTablesResponse<InstitutionListDto>()
             {

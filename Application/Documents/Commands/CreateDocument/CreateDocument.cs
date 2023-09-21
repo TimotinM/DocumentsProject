@@ -55,9 +55,12 @@ namespace Application.Documents.Commands.CreateDocument
                 }
 
                 var documentName = request.DocumentDto.SavePath.FileName;
-                filePath = Path.Combine(filePath, documentName);             
+                filePath = Path.Combine(filePath, documentName);
 
-                await request.DocumentDto.SavePath.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                using (var destinationStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.DocumentDto.SavePath.CopyToAsync(destinationStream);
+                }
 
                 var entity = new Document()
                 {

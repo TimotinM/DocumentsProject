@@ -39,7 +39,7 @@
                         @if (User.IsInRole("BankOperator"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" onclick="goToBankIndex()" >Bank Operator</a>
+                                <a class="nav-link text-light" onclick="goToBankIndex()">Bank Operator</a>
                             </li>
                         }
                     </ul>
@@ -73,6 +73,7 @@
     <script src="~/lib/jstree/jstree.min.js"></script>
     <script src="~/js/admin.js" asp-append-version="true"></script>
     <script src="~/js/cedacri.js" asp-append-version="true"></script>
+    <script src="~/js/bank.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @if (User.IsInRole("Administrator"))
     {

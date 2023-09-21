@@ -55,6 +55,62 @@ function loadDocumentsTable() {
             let row = table.row(options.$trigger);
             switch (key) {
                 case 'details':
+                    loadDocumentDetails(row.data()["id"]);
+                    break;
+                case 'edit':
+                    break;
+                default:
+                    break
+            }
+        },
+        items: {
+            "edit": { name: "Edit" },
+            "details": { name: "Details" }
+        }
+    });
+}
+
+function loadProjectsTable() {
+    let table = $("#projectsDatatable").DataTable({
+        serverSide: true,
+        "ajax": {
+            "url": "/Cedacri/GetProjectsTable",
+            "type": "POST",
+            "datatype": "json"
+        },
+        "dateFormat": "yy-mm-dd",
+        "columns": [
+            { "data": "id", title: "Id", name: "id", visible: false },
+            { "data": "name", "title": "Name", "name": "name", "autoWidth": true },
+            { "data": "formattedDateFrom", "title": "Date From", "name": "dateFrom", "autoWidth": true },
+            { "data": "formattedDateTill", "title": "Date Till", "name": "DateTill", "autoWidth": true },
+            { "data": "institution", "title": "Institution", "name": "institution", "autoWidth": true },
+            { "data": "userName", "title": "User", "name": "applicationUser", "autoWidth": true },
+            {
+                "data": "isActive",
+                "title": "Is Active",
+                "name": "isActive",
+                "autoWidth": true,
+                "render": function (data, type, full, meta) {
+                    if (type === 'display') {
+                        return '<input class="form-check-input" type="checkbox" disabled ' + (data ? 'checked' : '') + '>';
+                    }
+                    return data;
+                }
+            }
+        ],
+        columnDefs: [
+            { className: 'text-center', targets: [6] },
+        ],
+
+    });
+    let contextmenu = $('#documentsDatatable').contextMenu({
+        selector: 'tr',
+        trigger: 'right',
+        callback: function (key, options) {
+            let row = table.row(options.$trigger);
+            switch (key) {
+                case 'details':
                     break;
                 case 'edit':
                     break;
@@ -104,6 +160,7 @@ function createProject() {
             method: "POST",
             success: function (response) {
                 $('#modalContainer').modal('toggle');
+                $('#projectsDatatable').DataTable().ajax.reload();
             },
             error: function (response) {
                 var errorDiv = $("#createProjectErrors");
@@ -208,5 +265,32 @@ function generateDocumentsTree() {
     });
 
     
+}
+function generateProjectsTree() {
+    $.ajax({
+        url: "/Cedacri/GetProjectsTree",
+        method: "GET",
+        success: function (data) {
+            $('#projtree').jstree({
+                'core': {
+                    'data': data
+                }
+            });
+
+            $('#projtree').on('changed.jstree', function (e, data) {
+                var table = $('#projectsDatatable').DataTable();
+                var selectedNode = data.instance.get_node(data.selected[0]);
+                console.log(selectedNode.original.column)
+                table.column(selectedNode.original.column).search(selectedNode.original.text)
+                var currentNode = selectedNode;
+                while (currentNode.parent !== '#') {
+                    var parentNode = data.instance.get_node(currentNode.parent);
+                    table.column(selectedNode.original.column).search(selectedNode.original.text)
+                    currentNode = parentNode;
+                }
+                table.draw();
+            });
+        }
+    });
 }
 

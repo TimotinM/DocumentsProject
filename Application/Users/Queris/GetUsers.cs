@@ -26,26 +26,26 @@ namespace Application.Users.Queris
             var orderColumn = request.Parameters.Columns[request.Parameters.Order[0].Column].Name == "nameSurname" ? "name" : request.Parameters.Columns[request.Parameters.Order[0].Column].Name;
             var toFind = request.Parameters.Search.Value ?? "";
 
-            var users = await _userManager.Users
+            var query = _userManager.Users
                 .Where(x => x.Name.Contains(toFind)
                     || x.Surname.Contains(toFind)
-                    || x.Email.Contains(toFind))
+                    || x.Email.Contains(toFind));
+
+            var total = await query.CountAsync();
+
+            var users = await query
                 .Skip(request.Parameters.Start)
                 .Take(request.Parameters.Length)
                 .OrderByExtension(orderColumn, request.Parameters.Order[0].Dir)
-                .Select(x => new UsersListDto() { 
-                        UserName = x.UserName,
-                        Id = x.Id,
-                        Email = x.Email,
-                        NameSurname = x.Name + " " + x.Surname,
-                        IsEnabled = x.IsEnabled })
+                .Select(x => new UsersListDto()
+                {
+                    UserName = x.UserName,
+                    Id = x.Id,
+                    Email = x.Email,
+                    NameSurname = x.Name + " " + x.Surname,
+                    IsEnabled = x.IsEnabled
+                })
                 .ToListAsync(cancellationToken);
-
-            var total = await _userManager.Users
-                .Where(x => x.Name.Contains(toFind)
-                    || x.Surname.Contains(toFind)
-                    || x.Email.Contains(toFind))
-                .CountAsync();
 
             var response = new DataTablesResponse<UsersListDto>()
             {
