@@ -38,7 +38,6 @@ namespace Application.Users.Conmmand.UpdateUser
                 await _userManager.RemoveFromRolesAsync(user, roles);
                 await _userManager.AddToRolesAsync(user, request.User.UserRoles);
 
-                user.UserName = request.User.UserName;
                 user.Email = request.User.Email;
                 user.Name = request.User.Name;
                 user.Surname = request.User.Surname;

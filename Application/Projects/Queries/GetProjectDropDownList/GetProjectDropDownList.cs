@@ -6,6 +6,7 @@ namespace Application.Projects.Queries.GetProjectDropDownList
 {
     public class GetProjectDropDownListRequest : IRequest<List<ProjectsDropDownListDto>>
     {
+        public int InstitutionId { get; set; }
     }
 
     public class GetProjectDropDownListRequestHandler : IRequestHandler<GetProjectDropDownListRequest, List<ProjectsDropDownListDto>>
@@ -18,6 +19,7 @@ namespace Application.Projects.Queries.GetProjectDropDownList
         public async Task<List<ProjectsDropDownListDto>> Handle(GetProjectDropDownListRequest request, CancellationToken cancellationToken)
         {
             var response = await _context.Projects
+                .Where(x => x.IdInstitution == request.InstitutionId)
                 .Select(x => new ProjectsDropDownListDto()
                 {
                     Id = x.Id,

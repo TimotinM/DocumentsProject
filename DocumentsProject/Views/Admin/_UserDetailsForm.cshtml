@@ -43,25 +43,19 @@
         <br>
     </div>
 
-    <div class="mb-3 row " id="roleSelectForm">
-        <label class=" col-sm-3 form-label" asp-for="UserRoles">Role: </label>
+    <div class="mb-3 row" id="roleSelectForm">
+        <label class="col-sm-3 form-label" asp-for="UserRoles">Roles: </label>
         <div class="col-sm-9">
-            <select id="roleSelect" class="selectpicker" asp-for="UserRoles" multiple disabled>
-                <option value="Administrator"> Administrator </option>
-                <option value="CedacriOperator"> Cedacri Operator </option>
-                <option value="BankOperator"> Bank Operator </option>
-            </select>
-            <span class="text-danger" asp-validation-for="UserRoles"></span>
+            <input class="form-control" type="text" asp-for="UserRoles" disabled value="@string.Join(", ", Model.UserRoles)">
         </div>
         <br>
     </div>
 
+
     <div class="mb-3 row " id="institutionSelect" hidden>
         <label class=" col-sm-3 form-label" asp-for="Institution">Institution: </label>
         <div class="col-sm-5">
-            <select id="institutionValue" class="form-select" asp-for="Institution" disabled>
-                    <option>@Model.Institution</option>
-            </select>
+            <input class=" form-control custom-file-input" asp-for="Institution" disabled>
         </div>
         <br>
     </div>

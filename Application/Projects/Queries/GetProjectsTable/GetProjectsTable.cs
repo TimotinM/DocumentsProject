@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
 using Application.Responses;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Application.TableParameters;
@@ -25,11 +26,22 @@ namespace Application.Projects.Queries.GetProjectsTable
         {
             var orderColumn = request.Parameters.Columns[request.Parameters.Order[0].Column].Name;
             var toFind = request.Parameters.Search.Value ?? "";
+            var institutionSearchValue = request.Parameters.Columns.First(x => x.Name == "institution").Search.Value;
+            var dateSearchValue = request.Parameters.Columns.First(x => x.Name == "DateTill").Search.Value;
 
-            var query = _context.Projects
+            IQueryable<Project> query = _context.Projects
                  .Include(x => x.Institution)
-                 .Include(x => x.ApplicationUser)
-                 .Where(x => x.Name.Contains(toFind)
+                 .Include(x => x.ApplicationUser);
+
+            query = !string.IsNullOrEmpty(institutionSearchValue)
+                    ? query.Where(x => x.Institution.Name == institutionSearchValue)
+                    : query;
+
+            query = !string.IsNullOrEmpty(dateSearchValue)
+                    ? query.Where(x => x.DateTill.Year.ToString() == dateSearchValue)
+                    : query;
+
+            query = query.Where(x => x.Name.Contains(toFind)
                      || x.Institution.Name.Contains(toFind)
                      || x.ApplicationUser.UserName.Contains(toFind)
                      || x.DateFrom.Year.ToString().Contains(toFind)

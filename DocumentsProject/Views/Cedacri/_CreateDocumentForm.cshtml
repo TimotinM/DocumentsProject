@@ -22,7 +22,7 @@
     <div class="mb-3 row " id="institutionSelect">
         <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
         <div class="col-sm-9">
-            <select id="institutionValue" class="form-select" asp-for="IdInstitution">
+            <select id="institutionValue" class="form-select" onchange="populateProjectSelect(this.value)" asp-for="IdInstitution">
                 <option id="institutionDefault" value="" disabled selected hidden>--Select Institution--</option>
                 @foreach (var item in ViewBag.Institutions)
                 {
@@ -63,12 +63,8 @@
     <div class="mb-3 row " id="projectSelect" hidden>
         <label class=" col-sm-3 form-label" asp-for="IdProject">Project: </label>
         <div class="col-sm-9">
-            <select id="projectValue" class="form-select" asp-for="IdProject">
-                <option id="projectDefault" value="" disabled selected hidden>--Select Project--</option>
-                @foreach (var item in ViewBag.Project)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
+            <select id="projectValue" class="form-select" asp-for="IdProject" disabled>
+                <option id="projectDefault" value="" disabled selected hidden>--Select Project--</option>              
             </select>
             <span class="text-danger" asp-validation-for="IdProject"></span>
         </div>

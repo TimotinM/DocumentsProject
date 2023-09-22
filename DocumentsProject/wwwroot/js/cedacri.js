@@ -28,6 +28,41 @@ function loadCreateProjectForm() {
         }
     });
 }
+function loadUpdateProjectForm(id) {
+    $.ajax({
+        url: "/Cedacri/GetUpdateProject",
+        method: "GET",
+        data: {
+            projectId: id
+        },
+        success: function (response) {
+            $('#modalTitle').html("Update Project")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+            configureDatePicker();
+            $('#modalContainer').modal('toggle');
+        }
+    });
+}
+function loadProjectDetails(id) {
+    $.ajax({
+        url: "/Cedacri/GetProjectDetails",
+        method: "GET",
+        data: {
+            projectId: id
+        },
+        success: function (response) {
+            $('#modalTitle').html(null)
+            $('#modalTitle').html("Project Information")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $('#modalContainer').modal('toggle');
+        }
+    });
+}
 
 function loadDocumentsTable() {
     let table = $("#documentsDatatable").DataTable({
@@ -104,15 +139,17 @@ function loadProjectsTable() {
         ],
 
     });
-    let contextmenu = $('#documentsDatatable').contextMenu({
+    let contextmenu = $('#projectsDatatable').contextMenu({
         selector: 'tr',
         trigger: 'right',
         callback: function (key, options) {
             let row = table.row(options.$trigger);
             switch (key) {
                 case 'details':
+                    loadProjectDetails(row.data()["id"]);
                     break;
                 case 'edit':
+                    loadUpdateProjectForm(row.data()["id"])
                     break;
                 default:
                     break
@@ -138,6 +175,7 @@ function createDocument() {
             success: function (response) {
                 $('#modalContainer').modal('toggle');
                 $('#documentsDatatable').DataTable().ajax.reload();
+                refreshDocumentsTree();
             },
             error: function (response) {
                 var errorDiv = $("#createDocumentErrors");
@@ -161,6 +199,7 @@ function createProject() {
             success: function (response) {
                 $('#modalContainer').modal('toggle');
                 $('#projectsDatatable').DataTable().ajax.reload();
+                refreshProjetsTree();
             },
             error: function (response) {
                 var errorDiv = $("#createProjectErrors");
@@ -169,6 +208,33 @@ function createProject() {
                     errorDiv.append("<p>" + value + "</p>");
                 });
                 document.getElementById("createProjectErrors").hidden = false;
+            }
+        });
+    }
+}
+function updateProject() {
+    var form = $("#updateProjectForm");
+    var url = form.attr('action');
+    if (form.valid()) {
+        $.ajax({
+            url: url,
+            xhrFields: {
+                withCredentials: true
+            },
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $('#projectsDatatable').DataTable().ajax.reload();
+                refreshProjetsTree();
+            },
+            error: function (response) {
+                var errorDiv = $("#updateProjectErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("updateProjectErrors").hidden = false;
             }
         });
     }
@@ -184,13 +250,34 @@ function populateMicroSelect(id) {
         success: function (data) {
             $("#microValue").empty();
             $("#microValue").append(
-                $("<option>").val("").text("--Select MICRO--")
+                $("<option disabled selected hidden>").val("").text("--Select MICRO--")
             );
             $.each(data, function (i, item) {
                 $("#microValue").append(
                     $("<option>").val(item.id).text(item.name)
                 );
             });
+        }
+    });
+}
+function populateProjectSelect(id) {
+    $.ajax({
+        url: "/Cedacri/GetInstitutionProjects",
+        type: "GET",
+        data: {
+            institutionId: id
+        },
+        success: function (data) {
+            $("#projectValue").empty();
+            $("#projectValue").append(
+                $("<option disabled selected hidden>").val("").text("--Select Project--")
+            );
+            $.each(data, function (i, item) {
+                $("#projectValue").append(
+                    $("<option>").val(item.id).text(item.name)
+                );
+            });
+            document.getElementById("projectValue").disabled = false;
         }
     });
 }
@@ -251,20 +338,18 @@ function generateDocumentsTree() {
             $('#doctree').on('changed.jstree', function (e, data) {
                 var table = $('#documentsDatatable').DataTable();
                 var selectedNode = data.instance.get_node(data.selected[0]);
-                console.log(selectedNode.original.column)
+                table.columns().search('');
                 table.column(selectedNode.original.column).search(selectedNode.original.text)
                 var currentNode = selectedNode;
                 while (currentNode.parent !== '#') {
                     var parentNode = data.instance.get_node(currentNode.parent);
-                    table.column(selectedNode.original.column).search(selectedNode.original.text)
+                    table.column(parentNode.original.column).search(parentNode.original.text)
                     currentNode = parentNode;
                 }
                 table.draw();
             });
         }
-    });
-
-    
+    });  
 }
 function generateProjectsTree() {
     $.ajax({
@@ -280,16 +365,36 @@ function generateProjectsTree() {
             $('#projtree').on('changed.jstree', function (e, data) {
                 var table = $('#projectsDatatable').DataTable();
                 var selectedNode = data.instance.get_node(data.selected[0]);
-                console.log(selectedNode.original.column)
+                table.columns().search('');
                 table.column(selectedNode.original.column).search(selectedNode.original.text)
                 var currentNode = selectedNode;
                 while (currentNode.parent !== '#') {
                     var parentNode = data.instance.get_node(currentNode.parent);
-                    table.column(selectedNode.original.column).search(selectedNode.original.text)
+                    table.column(parentNode.original.column).search(parentNode.original.text)
                     currentNode = parentNode;
                 }
                 table.draw();
             });
+        }
+    });
+}
+function refreshDocumentsTree() {
+    $.ajax({
+        url: "/Cedacri/GetDocumentsTree",
+        method: "GET",
+        success: function (data) {
+            $('#doctree').jstree(true).settings.core.data = data;
+            $('#doctree').jstree(true).refresh();
+        }
+    });
+}
+function refreshProjetsTree() {
+    $.ajax({
+        url: "/Cedacri/GetProjectsTree",
+        method: "GET",
+        success: function (data) {
+            $('#projtree').jstree(true).settings.core.data = data;
+            $('#projtree').jstree(true).refresh();
         }
     });
 }

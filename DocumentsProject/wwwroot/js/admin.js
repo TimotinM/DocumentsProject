@@ -42,27 +42,28 @@ function createUser() {
 function updateUser() {
     var form = $("#updateUserForm");
     var url = form.attr('action');
-    $.ajax({
-        url: url,
-        xhrFields: {
-            withCredentials: true
-        },
-        data: form.serialize(),
-        method: "POST",
-        success: function (response) {
-            $('#modalContainer').modal('toggle');
-            $("#updateUserForm")[0].reset();
-            $('#usersDatatable').DataTable().ajax.reload();
-        },
-        error: function (response) {
-            var errorDiv = $("#editUserErrors");
-            errorDiv.empty();
-            $.each(response.responseJSON, function (key, value) {
-                errorDiv.append("<p>" + value + "</p>");
-            });
-            document.getElementById("editUserErrors").hidden = false;
-        }
-    });
+    if (form.valid()) {
+        $.ajax({
+            url: url,
+            xhrFields: {
+                withCredentials: true
+            },
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $('#usersDatatable').DataTable().ajax.reload();
+            },
+            error: function (response) {
+                var errorDiv = $("#editUserErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("editUserErrors").hidden = false;
+            }
+        });
+    }
 }
 
 function changeUserPassword() {
@@ -160,13 +161,7 @@ function loadUserDetails(userId) {
             $('#modalTitle').html(null)
             $('#modalTitle').html("User Details")
             $('#modalBody').html(null);
-            $('#modalBody').html(response);
-            $('#roleSelect').multiselect({
-                templates: {
-                    button: '<button type="button" class="multiselect dropdown-toggle btn btn-light" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
-                },
-            });
-            renderInstitutionSelect(document.getElementById("roleSelect").value);
+            $('#modalBody').html(response);          
             $('#modalContainer').modal('toggle');
         }
 
