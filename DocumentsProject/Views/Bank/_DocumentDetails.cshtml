@@ -14,9 +14,7 @@
         <div class="mb-3 row " id="institutionSelect">
             <label class=" col-sm-3 form-label" asp-for="Institution">Institution: </label>
             <div class="col-sm-9">
-            <select id="institutionValue" class="form-select" asp-for="Institution" disabled>
-                    <option id="institutionDefault" value="" selected>@Model.Institution</option>
-                </select>
+                <input class=" form-control custom-file-input" asp-for="Institution" disabled>
             </div>
             <br>
          </div>
@@ -24,9 +22,7 @@
     <div class="mb-3 row " id="macroSelect">
         <label class=" col-sm-3 form-label" asp-for="Macro">MACRO Type: </label>
         <div class="col-sm-9">
-            <select id="macroValue" class="form-select" asp-for="Macro" disabled>
-                <option id="macroDefault" value="" selected>@Model.Macro</option>
-            </select>
+            <input class=" form-control custom-file-input" asp-for="Macro" disabled>
         </div>
         <br>
     </div>
@@ -36,9 +32,7 @@
         <div class="mb-3 row " id="microSelect">
             <label class=" col-sm-3 form-label" asp-for="Micro">MICRO Type: </label>
             <div class="col-sm-9">
-                <select id="microValue" class="form-select" asp-for="Micro" disabled>
-                    <option id="microDefault" value="" selected>@Model.Micro</option>
-                </select>
+                <input class=" form-control custom-file-input" asp-for="Micro" disabled>
             </div>
             <br>
         </div>
@@ -49,10 +43,7 @@
         <div class="mb-3 row " id="projectSelect">
             <label class=" col-sm-3 form-label" asp-for="Project">Project: </label>
             <div class="col-sm-9">
-                <select id="projectValue" class="form-select" asp-for="Project" disabled>
-                    <option id="projectDefault" value="" selected>@Model.Project</option>
-                </select>
-                <span class="text-danger" asp-validation-for="Project"></span>
+                <input class=" form-control custom-file-input" asp-for="Project" disabled>
             </div>
             <br>
         </div>

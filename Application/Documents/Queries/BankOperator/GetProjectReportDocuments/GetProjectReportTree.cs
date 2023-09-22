@@ -39,12 +39,7 @@ namespace Application.Documents.Queries.BankOperator.GetProjectReportDocuments
                     {
                         Text = projectGroup.Key.Name,
                         Children = projectGroup
-                            .GroupBy(doc => doc.GroupingDate.Month)
-                            .Select(monthGroup => new JsTree()
-                            {
-                                Text = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthGroup.Key),
-                                Children = monthGroup
-                                    .GroupBy(doc => doc.DocumentType.Name)
+                            .GroupBy(doc => doc.DocumentType.Name)
                                     .Select(docGroup => new JsTree()
                                     {
                                         Text = $"{docGroup.Key} ({docGroup.Count()})",
@@ -56,7 +51,6 @@ namespace Application.Documents.Queries.BankOperator.GetProjectReportDocuments
                                                 Value = d.Id
                                             }).ToList()
                                     }).ToList()
-                            }).ToList()
                     }).ToListAsync();
 
             return response;
