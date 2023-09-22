@@ -10,7 +10,13 @@ namespace Infrastructure.Data.Configurations
         {
             builder.Property(n => n.Name)
                 .HasMaxLength(255);
-            
+
+
+            builder.HasMany(m => m.Macro)
+                .WithMany(n => n.Micro)
+                .UsingEntity(j => j
+                    .ToTable("DocumentsTypeIerarchy"));
+                
         }
     }
 }

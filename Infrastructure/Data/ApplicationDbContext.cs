@@ -18,7 +18,6 @@ namespace DocumentsProject.Infrastructure.Data
         public DbSet<Institution> Institutions => Set<Institution>();
         public DbSet<Project> Projects => Set<Project>();
         public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
-        public DbSet<DocumentTypeIerarchy> DocumentsTypeIerarchy => Set<DocumentTypeIerarchy>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,0 +1,101 @@
+﻿@using Application.Users.Conmmand.UpdateUser;
+@model UpdateUserDto
+
+<form class="bg-white" id="updateUserForm" asp-controller="Admin" asp-action="UpdateUser" asp-route-userId="@Model.Id" asp-antiforgery="true">
+
+    <div id="editUserErrors" class="alert alert-danger" hidden>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="UserName">Username: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" type="text" asp-for="UserName">
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Email">Email: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="email" asp-for="Email">
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Name">Name: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Surname">Surname: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Surname">
+            <span class="text-danger" asp-validation-for="Surname"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class=" col-sm-3 form-label" asp-for="Patronymic">Patronymic: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" asp-for="Patronymic">
+            <span class="text-danger" asp-validation-for="Patronymic"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="roleSelectForm">
+        <label class=" col-sm-3 form-label" asp-for="UserRoles">Role: </label>
+        <div class="col-sm-9">
+            <select id="roleSelect" class="selectpicker" asp-for="UserRoles" multiple onchange="renderInstitutionSelect(this.value);">
+                <option value="Administrator"> Administrator </option>
+                <option value="CedacriOperator"> Cedacri Operator </option>
+                <option value="BankOperator"> Bank Operator </option>
+            </select>
+            <span class="text-danger" asp-validation-for="UserRoles"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="institutionSelect" hidden>
+        <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
+        <div class="col-sm-5">
+            <select id="institutionValue" class="form-select" asp-for="IdInstitution">
+                <option value="" disabled hidden>--Select Institution--</option>
+                @foreach (var institution in ViewBag.Institutions)
+                {
+                    <option value="@institution.Id">@institution.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdInstitution"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row ">
+        <label class="col-sm-3 form-check-label" asp-for="IsEnabled">Enabled: </label>
+        <div class="col-sm-9">
+            <div class=" form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" asp-for="IsEnabled">
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button type="button" onclick="updateUser()" class="btn btn-primary float-sm-end">Submit</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

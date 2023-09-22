@@ -1,0 +1,70 @@
+﻿@using Application.Projects.Commands.CreateProject;
+@model CreateProjectDto
+
+<form class="bg-white" id="createProjectForm" asp-antiforgery="true">
+
+    <div id="createProjectErrors" class="alert alert-danger" hidden>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="Name">Name: </label>
+        <div class="col-sm-9">
+            <input class=" form-control custom-file-input" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="institutionSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
+        <div class="col-sm-9">
+            <select id="institutionValue" class="form-select" asp-for="IdInstitution">
+                <option id="institutionDefault" value="" disabled selected hidden>--Select Institution--</option>
+                @foreach (var item in ViewBag.Institutions)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdInstitution"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="DateFrom">Date From: </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="dateFrom" onchange="configureDatePicker()" type="date" asp-for="DateFrom">
+            <span class="text-danger" asp-validation-for="DateFrom"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="DateFrom">Date Till: </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="dateTill" type="date" asp-for="DateTill" onfocus="blur" disabled>
+            <span class="text-danger" asp-validation-for="DateTill"></span>
+        </div>
+        <br>
+    </div>
+
+    <label class="form-label" asp-for="AdditionalInfo">Additional Informations: </label>
+    <br>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-9">
+            <textarea class="form-control" type="text" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button type="button" onclick="createProject()" class="btn btn-primary float-sm-end">Submit</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

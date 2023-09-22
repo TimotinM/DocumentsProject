@@ -1,4 +1,41 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function goToAdminIndex() {
+    $.ajax({
+        url: "/Admin/Index",
+        method: "GET",
+        success: function (response) {
+            $('#contentDiv').html(null);
+            $('#contentDiv').html(response);
+            loadInstitutionsTable();
+            loadUsersTable();
+        }
+    });
+}
 
-// Write your JavaScript code.
+function goToCedacriIndex() {
+    $.ajax({
+        url: "/Cedacri/Index",
+        method: "GET",
+        success: function (response) {
+            $('#contentDiv').html(null);
+            $('#contentDiv').html(response);
+            generateDocumentsTree(); 
+            loadDocumentsTable();
+            generateProjectsTree();
+            loadProjectsTable();
+        }
+    });
+}
+
+function goToBankIndex() {
+    $.ajax({
+        url: "/Bank/Index",
+        method: "GET",
+        success: function (response) {
+            $('#contentDiv').html(null);
+            $('#contentDiv').html(response);
+            generateServiceReport();
+            generateSLAReport();
+            generateProjectReport();
+        }
+    });
+}

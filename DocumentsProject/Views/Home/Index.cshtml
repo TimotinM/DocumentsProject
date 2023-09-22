@@ -9,27 +9,12 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    @if (User.IsInRole("Administrator"))
-    {
-        <p>Admin</p>
-        <partial name="~/Views/Admin/Index.cshtml" />
-    }
-    else if (User.IsInRole("BankOperator"))
-    {
-        <p>OP bancar</p>
-    }
-    else if (User.IsInRole("CedacriOperator"))
-    {
-        <p>OP Ced</p>
-    }
-}
-else
-{
-    
+   <div id="contentDiv">
+
+   </div>
 }
 
 @section Scripts {
-    <script src="~/js/institutions.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
