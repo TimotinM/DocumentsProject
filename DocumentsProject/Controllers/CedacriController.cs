@@ -1,4 +1,6 @@
 ﻿using Application.Documents.Commands.CreateDocument;
+using Application.Documents.Commands.UpdateDocument;
+using Application.Documents.Queries.GetDocumentById;
 using Application.Documents.Queries.GetDocumentsTable;
 using Application.Documents.Queries.GetDocumentsTree;
 using Application.Documents.Queries.GetDocumentTypeList;
@@ -12,7 +14,6 @@ using Application.Projects.Queries.GetProjectsTable;
 using Application.Projects.Queries.GetProjectsTree;
 using Application.Responses;
 using Application.Responses.JsTree;
-using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -80,6 +81,37 @@ namespace DocumentsProject.Controllers
             request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new CreateDocumentCommand() { DocumentDto = request });
 
+            if (!response.Success)
+                return BadRequest(response.Errors);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetUpdateDocument(int documentId)
+        {
+            var document = await _mediator.Send(new GetDocumentByIdRequest() { Id = documentId });
+            var model = new UpdateDocumentDto()
+            {
+                Id = document.Id,
+                Name = document.Name,
+                IdInstitution = document.IdInstitution,
+                IdMacro = document.IdMacro,
+                IdMicro = document.IdMicro,
+                IdProject = document.IdProject,
+                GroupingDate = document.GroupingDate,
+                AdditionalInfo = document.AdditionalInfo
+            };
+            ViewBag.Macro = await _mediator.Send(new GetDocumentsTypeDropDownListRequest() { IsMacro = true });
+            ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
+            return PartialView("_UpdateDocumentForm", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateDocument(int documentId, [FromForm] UpdateDocumentDto request)
+        {
+            request.Id = documentId;
+            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var response = await _mediator.Send(new UpdateDocumentRequest() { DocumentDto = request });
             if (!response.Success)
                 return BadRequest(response.Errors);
             return Ok(response);

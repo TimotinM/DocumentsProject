@@ -1,4 +1,6 @@
 ﻿using Application.Istitutions.Commands.CreateInstitution;
+using Application.Istitutions.Commands.UpdateInstitution;
+using Application.Istitutions.Queries.GetInstitutionById;
 using Application.Istitutions.Queries.GetInstitutionDropDownList;
 using Application.Istitutions.Queries.GetInstitutionsTable;
 using Application.Responses;
@@ -54,6 +56,30 @@ namespace DocumentsProject.Controllers
                 var response = await _mediator.Send(command);
                 ViewBag.Errors = response.Errors;
                 return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetUpdateInstitution(int institutionId)
+        {
+            var institution = await _mediator.Send(new GetInstitutionByIdRequest() { Id = institutionId });
+            var model = new UpdateInstitutionDto()
+            {
+                Id = institutionId,
+                InstCode = institution.InstCode,
+                Name = institution.Name,
+                AdditionalInfo = institution.AdditionalInfo
+            };
+            return PartialView("_UpdateInstitutionForm", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateInstitution(int institutionId, [FromForm] UpdateInstitutionDto request)
+        {
+            request.Id = institutionId;
+            var response = await _mediator.Send(new UpdateInstitutionRequest() { InstitutionDto = request });
+            if (!response.Success)
+                return BadRequest(response.Errors);
+            return Ok(response);
         }
 
         [HttpPost]
