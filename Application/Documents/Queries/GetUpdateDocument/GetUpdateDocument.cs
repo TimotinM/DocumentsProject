@@ -1,29 +1,29 @@
-﻿
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Documents.Commands.UpdateDocument;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Documents.Queries.GetDocumentById
 {
-    public class GetDocumentByIdRequest : IRequest<DocumentDto>
+    public class GetUpdateDocument : IRequest<UpdateDocumentDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetDocumentByIdRequestHandler : IRequestHandler<GetDocumentByIdRequest, DocumentDto>
+    public class GetUpdateDocumentHandler : IRequestHandler<GetUpdateDocument, UpdateDocumentDto>
     {
         private readonly IApplicationDbContext _context;
 
-        public GetDocumentByIdRequestHandler(IApplicationDbContext context)
+        public GetUpdateDocumentHandler(IApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<DocumentDto> Handle(GetDocumentByIdRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateDocumentDto> Handle(GetUpdateDocument request, CancellationToken cancellationToken)
         {
             var response = await _context.Documents
                 .Include(x => x.DocumentType)
                     .ThenInclude(x => x.Macro)
-                .Select(x => new DocumentDto()
+                .Select(x => new UpdateDocumentDto()
                 {
                     Id = x.Id,
                     Name = x.Name,

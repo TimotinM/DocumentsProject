@@ -1,11 +1,6 @@
 ﻿@using Application.Documents.Commands.UpdateDocument;
 @model UpdateDocumentDto
-@{
-    <script>
-        populateProjectSelect(@Model.IdInstitution);
-        macroChange(document.getElementById("macroValue"));
-    </script>
-}
+
 <form class="bg-white" id="updateDocumentForm" asp-controller="Cedacri" asp-action="UpdateDocument" asp-route-documentId="@Model.Id" asp-antiforgery="true" asp-antiforgery="true">
 
     <div id="updateDocumentErrors" class="alert alert-danger" hidden>
@@ -49,21 +44,28 @@
     </div>
 
 
-    <div class="mb-3 row" id="microSelect" hidden">
+    <div class="mb-3 row" id="microSelect" hidden="@(!(Model.IdMicro != null))">
         <label class=" col-sm-3 form-label" asp-for="IdMicro">MICRO Type: </label>
         <div class="col-sm-9">
             <select id="microValue" class="form-select" asp-for="IdMicro">
-               
+                @foreach (var item in ViewBag.Micro)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
             </select>
             <span class="text-danger" asp-validation-for="IdMicro"></span>
         </div>
         <br>
     </div>
 
-    <div class="mb-3 row " id="projectSelect" hidden>
+    <div class="mb-3 row " id="projectSelect" hidden="@(!(Model.IdProject != null))">
         <label class=" col-sm-3 form-label" asp-for="IdProject">Project: </label>
         <div class="col-sm-9">
-            <select id="projectValue" class="form-select" asp-for="IdProject" disabled>
+            <select id="projectValue" class="form-select" asp-for="IdProject">
+                @foreach (var item in ViewBag.Projects)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
             </select>
             <span class="text-danger" asp-validation-for="IdProject"></span>
         </div>

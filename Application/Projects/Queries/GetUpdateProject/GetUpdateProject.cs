@@ -1,28 +1,29 @@
 ﻿using Application.Common.Interfaces;
+using Application.Projects.Commands.UpdateProject;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Projects.Queries.GetProjectById
+namespace Application.Projects.Queries.GetUpdateProject
 {
-    public class GetProjectByIdRequest : IRequest<ProjectDto>
+    public class GetUpdateProjectRequest : IRequest<UpdateProjectDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetProjectByIdRequestHandler : IRequestHandler<GetProjectByIdRequest, ProjectDto>
+    public class GetUpdateProjectRequestHandler : IRequestHandler<GetUpdateProjectRequest, UpdateProjectDto>
     {
         private readonly IApplicationDbContext _context;
 
-        public GetProjectByIdRequestHandler(IApplicationDbContext context)
+        public GetUpdateProjectRequestHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ProjectDto> Handle(GetProjectByIdRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateProjectDto> Handle(GetUpdateProjectRequest request, CancellationToken cancellationToken)
         {
             var result = await _context.Projects
                     .Where(x => x.Id == request.Id)
-                    .Select(x => new ProjectDto()
+                    .Select(x => new UpdateProjectDto()
                     {
                         Id = x.Id,
                         DateFrom = x.DateFrom,

@@ -1,21 +1,25 @@
-﻿using Application.Istitutions.Commands.CreateInstitution;
+﻿#nullable disable
+using Application.Istitutions.Commands.CreateInstitution;
 using Application.Istitutions.Commands.UpdateInstitution;
-using Application.Istitutions.Queries.GetInstitutionById;
 using Application.Istitutions.Queries.GetInstitutionDropDownList;
 using Application.Istitutions.Queries.GetInstitutionsTable;
+using Application.Istitutions.Queries.GetUpdateInstitution;
 using Application.Responses;
 using Application.Users.Conmmand.ChangeUserPassword;
 using Application.Users.Conmmand.CreateUser;
 using Application.Users.Conmmand.UpdateUser;
 using Application.Users.Queris;
+using Application.Users.Queris.GetRolesDropDownList;
 using Application.Users.Queris.GetUserDetails;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.TableParameters;
 
 namespace DocumentsProject.Controllers
 {
+    [Authorize(Roles = "Administrator")]   
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;
@@ -61,14 +65,7 @@ namespace DocumentsProject.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUpdateInstitution(int institutionId)
         {
-            var institution = await _mediator.Send(new GetInstitutionByIdRequest() { Id = institutionId });
-            var model = new UpdateInstitutionDto()
-            {
-                Id = institutionId,
-                InstCode = institution.InstCode,
-                Name = institution.Name,
-                AdditionalInfo = institution.AdditionalInfo
-            };
+            var model = await _mediator.Send(new GetUpdateInstitutionRequest() { Id = institutionId });
             return PartialView("_UpdateInstitutionForm", model);
         }
 
@@ -96,6 +93,7 @@ namespace DocumentsProject.Controllers
         {
             var request = new GetInstitutionDropDownListRequest();
             var institutions = await _mediator.Send(request);
+            ViewBag.Roles = await _mediator.Send(new GetRolesDropDownListRequest());
             ViewBag.Institutions = institutions;
             return PartialView("_AddUserForm");
         }
@@ -124,6 +122,7 @@ namespace DocumentsProject.Controllers
         {
             var model = await _mediator.Send(new GetUserByIdRequest { Id = id });
             var institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
+            ViewBag.Roles = await _mediator.Send(new GetRolesDropDownListRequest());
             ViewBag.Institutions = institutions;
             return PartialView("_EditUserForm", model);
         }

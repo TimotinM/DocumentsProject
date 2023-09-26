@@ -27,7 +27,6 @@ function loadUpdateDocumentForm(id) {
             $("form").removeData("validator");
             $("form").removeData("unobtrusiveValidation");
             $.validator.unobtrusive.parse("form");
-            selectUpdateMicroSelect(53);
             $('#modalContainer').modal('toggle');
         }
     });
@@ -309,7 +308,8 @@ function populateMicroSelect(id) {
 
 function selectUpdateMicroSelect(microId) {   
     var microSelect = document.getElementById("microValue");
-    for (var i = 0; i < microSelect.options.length; i++) {       
+    console.log(microSelect);
+    for (var i = 0; i < microSelect.options.length; i++) {
         if (microSelect.options[i].value == microId) {
             microSelect.options[i].selected = true;
             break;
@@ -371,7 +371,6 @@ function renderMicroSelect(element) {
     var text = element.options[element.selectedIndex].text;
 
     if (text == "SLA") {
-        document.getElementById("microValue")[0].selected = true;
         document.getElementById("microSelect").hidden = true;
     }
     else {
@@ -453,5 +452,15 @@ function refreshProjetsTree() {
             $('#projtree').jstree(true).refresh();
         }
     });
+}
+function showAllDocuments() {
+    var table = $('#documentsDatatable').DataTable();
+    table.columns().search('');
+    table.draw();
+}
+function showAllProjects() {
+    var table = $('#projectsDatatable').DataTable();
+    table.columns().search('');
+    table.draw();
 }
 

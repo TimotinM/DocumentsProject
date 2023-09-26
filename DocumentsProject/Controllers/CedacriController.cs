@@ -1,4 +1,5 @@
-﻿using Application.Documents.Commands.CreateDocument;
+﻿#nullable disable
+using Application.Documents.Commands.CreateDocument;
 using Application.Documents.Commands.UpdateDocument;
 using Application.Documents.Queries.GetDocumentById;
 using Application.Documents.Queries.GetDocumentsTable;
@@ -7,11 +8,11 @@ using Application.Documents.Queries.GetDocumentTypeList;
 using Application.Istitutions.Queries.GetInstitutionDropDownList;
 using Application.Projects.Commands.CreateProject;
 using Application.Projects.Commands.UpdateProject;
-using Application.Projects.Queries.GetProjectById;
 using Application.Projects.Queries.GetProjectDetails;
 using Application.Projects.Queries.GetProjectDropDownList;
 using Application.Projects.Queries.GetProjectsTable;
 using Application.Projects.Queries.GetProjectsTree;
+using Application.Projects.Queries.GetUpdateProject;
 using Application.Responses;
 using Application.Responses.JsTree;
 using MediatR;
@@ -57,7 +58,7 @@ namespace DocumentsProject.Controllers
         [HttpGet]
         public async Task<ActionResult> GetInstitutionProjects(int institutionId)
         {
-            var response =await _mediator.Send(new GetProjectDropDownListRequest() { InstitutionId = institutionId});
+            var response = await _mediator.Send(new GetProjectDropDownListRequest() { InstitutionId = institutionId});
             return Ok(response);
         }
 
@@ -89,18 +90,9 @@ namespace DocumentsProject.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUpdateDocument(int documentId)
         {
-            var document = await _mediator.Send(new GetDocumentByIdRequest() { Id = documentId });
-            var model = new UpdateDocumentDto()
-            {
-                Id = document.Id,
-                Name = document.Name,
-                IdInstitution = document.IdInstitution,
-                IdMacro = document.IdMacro,
-                IdMicro = document.IdMicro,
-                IdProject = document.IdProject,
-                GroupingDate = document.GroupingDate,
-                AdditionalInfo = document.AdditionalInfo
-            };
+            var model = await _mediator.Send(new GetUpdateDocument() { Id = documentId });
+            ViewBag.Projects = await _mediator.Send(new GetProjectDropDownListRequest() { InstitutionId = (int)model.IdInstitution });
+            ViewBag.Micro = await _mediator.Send(new GetDocumentsTypeMicroDropDownListRequest() { IdMacro = model.IdMacro });
             ViewBag.Macro = await _mediator.Send(new GetDocumentsTypeDropDownListRequest() { IsMacro = true });
             ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
             return PartialView("_UpdateDocumentForm", model);
@@ -142,17 +134,7 @@ namespace DocumentsProject.Controllers
         public async Task<ActionResult> GetUpdateProject(int projectId)
         {
             ViewBag.Institutions = await _mediator.Send(new GetInstitutionDropDownListRequest());
-            var project = await _mediator.Send(new GetProjectByIdRequest() { Id = projectId });
-            var model = new UpdateProjectDto()
-            {
-                Id = projectId,
-                Name = project.Name,
-                IdInstitution = project.IdInstitution,
-                DateFrom = project.DateFrom,
-                DateTill = project.DateTill,
-                AdditionalInfo = project.AdditionalInfo,
-                IsActive = project.IsActive,
-            };
+            var model = await _mediator.Send(new GetUpdateProjectRequest() { Id = projectId });            
             return PartialView("_UpdateProjectForm", model);
         }
 
