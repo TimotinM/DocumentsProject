@@ -52,7 +52,7 @@
     </div>
 
 
-    <div class="mb-3 row " id="institutionSelect" hidden>
+    <div class="mb-3 row " id="institutionSelect" hidden="@(string.IsNullOrEmpty(Model.Institution))">
         <label class=" col-sm-3 form-label" asp-for="Institution">Institution: </label>
         <div class="col-sm-5">
             <input class=" form-control custom-file-input" asp-for="Institution" disabled>

@@ -1,0 +1,103 @@
+﻿@using Application.Documents.Commands.UpdateDocument;
+@model UpdateDocumentDto
+
+<form class="bg-white" id="updateDocumentForm" asp-controller="Cedacri" asp-action="UpdateDocument" asp-route-documentId="@Model.Id" asp-antiforgery="true" asp-antiforgery="true">
+
+    <div id="updateDocumentErrors" class="alert alert-danger" hidden>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="Name">File: </label>
+        <div class="col-sm-9">
+            <input class=" form-control" asp-for="Name" disabled>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="institutionSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdInstitution">Institution: </label>
+        <div class="col-sm-9">
+            <select id="institutionValue" class="form-select" onchange="populateProjectSelect(this.value)" asp-for="IdInstitution">
+                <option id="institutionDefault" value="" disabled selected hidden>--Select Institution--</option>
+                @foreach (var item in ViewBag.Institutions)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdInstitution"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="macroSelect">
+        <label class=" col-sm-3 form-label" asp-for="IdMacro">MACRO Type: </label>
+        <div class="col-sm-9">
+            <select id="macroValue" class="form-select" onchange="macroChange(this);" asp-for="IdMacro">            
+                @foreach (var item in ViewBag.Macro)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdMacro"></span>
+        </div>
+        <br>
+    </div>
+
+
+    <div class="mb-3 row" id="microSelect" hidden="@(!(Model.IdMicro != null))">
+        <label class=" col-sm-3 form-label" asp-for="IdMicro">MICRO Type: </label>
+        <div class="col-sm-9">
+            <select id="microValue" class="form-select" asp-for="IdMicro">
+                @foreach (var item in ViewBag.Micro)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdMicro"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row " id="projectSelect" hidden="@(!(Model.IdProject != null))">
+        <label class=" col-sm-3 form-label" asp-for="IdProject">Project: </label>
+        <div class="col-sm-9">
+            <select id="projectValue" class="form-select" asp-for="IdProject">
+                @foreach (var item in ViewBag.Projects)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="IdProject"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-3 form-label" asp-for="GroupingDate">Grouping Date: </label>
+        <div class="col-sm-9">
+            <input class="form-control" type="date" asp-for="GroupingDate">
+            <span class="text-danger" asp-validation-for="GroupingDate"></span>
+        </div>
+        <br>
+    </div> 
+
+    <label class="form-label" asp-for="AdditionalInfo">Additional Informations: </label>
+    <br>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-9">
+            <textarea class="form-control" type="text" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button type="button" onclick="updateDocument()" class="btn btn-primary float-sm-end">Submit</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

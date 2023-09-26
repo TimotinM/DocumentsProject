@@ -73,9 +73,10 @@
         <label class=" col-sm-3 form-label" asp-for="UserRoles">Role: </label>
         <div class="col-sm-9">
             <select id="roleSelect" class="selectpicker" asp-for="UserRoles" multiple onchange="renderInstitutionSelect(this.value);">
-                <option value="Administrator"> Administrator </option>
-                <option value="CedacriOperator"> Cedacri Operator </option>
-                <option value="BankOperator"> Bank Operator </option>
+                @foreach (var item in ViewBag.Roles)
+                {
+                    <option value="@item.Name">@item.Name</option>
+                }
             </select>
             <span class="text-danger" asp-validation-for="UserRoles"></span>
         </div>
@@ -96,16 +97,6 @@
         </div>
         <br>
     </div>
-
-    @* <div class="mb-3 row ">
-        <label class="col-sm-3 form-check-label" asp-for="IsEnabled">Enabled: </label>
-        <div class="col-sm-9">
-            <div class=" form-check form-switch">         
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" asp-for="IsEnabled">
-            </div>
-        </div>
-        <br>
-    </div> *@
 
     <div class="mb-3 row justify-content-end">
         <div class="col-sm-3">

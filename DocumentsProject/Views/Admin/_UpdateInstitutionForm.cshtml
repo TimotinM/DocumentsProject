@@ -1,0 +1,46 @@
+﻿@using Application.Istitutions.Commands.UpdateInstitution;
+@model UpdateInstitutionDto
+
+<form class="bg-white" id="updateInstitutionForm" asp-controller="Admin" asp-action="UpdateInstitution" asp-route-institutionId="@Model.Id" asp-antiforgery="true">
+
+    <div id="updateInstitutionErrors" class="alert alert-danger" hidden>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-2 form-label" asp-for="Name">Name: </label>
+        <div class="col-sm-10">
+            <input class=" form-control" type="text" asp-for="Name">
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row">
+        <label class=" col-sm-2 form-label" asp-for="InstCode">Code: </label>
+        <div class="col-sm-10">
+            <input class=" form-control" type="text" asp-for="InstCode">
+            <span class="text-danger" asp-validation-for="InstCode"></span>
+        </div>
+        <br>
+    </div>
+
+    <label class="form-label" asp-for="AdditionalInfo">Additional Informations: </label>
+    <br>
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-10">
+            <textarea class="form-control" type="text" asp-for="AdditionalInfo"></textarea>
+            <span class="text-danger" asp-validation-for="AdditionalInfo"></span>
+        </div>
+        <br>
+    </div>
+
+    <div class="mb-3 row justify-content-end">
+        <div class="col-sm-3">
+            <button onclick="updateInstitution()" type="button" class="btn btn-primary float-sm-end">Submit</button>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-secondary float-sm-end" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+
+</form>

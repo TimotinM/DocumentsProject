@@ -66,6 +66,33 @@ function updateUser() {
     }
 }
 
+function updateInstitution() {
+    var form = $("#updateInstitutionForm");
+    var url = form.attr('action');
+    if (form.valid()) {
+        $.ajax({
+            url: url,
+            xhrFields: {
+                withCredentials: true
+            },
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $('#institutionsDatatable').DataTable().ajax.reload();
+            },
+            error: function (response) {
+                var errorDiv = $("#updateInstitutionErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("updateInstitutionErrors").hidden = false;
+            }
+        });
+    }
+}
+
 function changeUserPassword() {
     var form = $("#changeUserPasswordForm");
     if (form.valid()) {
@@ -97,6 +124,25 @@ function loadCreateInstitutionForm() {
             $("form").removeData("validator");
             $("form").removeData("unobtrusiveValidation");
             $.validator.unobtrusive.parse("form");
+        }
+    });
+}
+
+function loadUpdateInstitutionForm(id) {
+    $.ajax({
+        url: "/Admin/GetUpdateInstitution",
+        method: "GET",
+        data: {
+            institutionId: id
+        },
+        success: function (response) {
+            $('#modalTitle').html("Update Institution")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+            $('#modalContainer').modal('toggle');
         }
     });
 }
@@ -211,9 +257,8 @@ function loadInstitutionsTable() {
         callback: function (key, options) {
             let row = table.row(options.$trigger);
             switch (key) {
-                case 'details':
-                    break;
                 case 'edit':
+                    loadUpdateInstitutionForm(row.data()["id"])
                     break;
                 default:
                     break
@@ -221,7 +266,6 @@ function loadInstitutionsTable() {
         },
         items: {
             "edit": { name: "Edit" },
-            "details": { name: "Details" }
         }
     });
 }

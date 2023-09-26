@@ -13,7 +13,24 @@
         }
     });
 }
-
+function loadUpdateDocumentForm(id) {
+    $.ajax({
+        url: "/Cedacri/GetUpdateDocument",
+        method: "GET",
+        data: {
+            documentId: id
+        },
+        success: function (response) {
+            $('#modalTitle').html("Update Document")
+            $('#modalBody').html(null);
+            $('#modalBody').html(response);
+            $("form").removeData("validator");
+            $("form").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse("form");
+            $('#modalContainer').modal('toggle');
+        }
+    });
+}
 function loadCreateProjectForm() {
     $.ajax({
         url: "/Cedacri/GetCreateProject",
@@ -93,6 +110,7 @@ function loadDocumentsTable() {
                     loadDocumentDetails(row.data()["id"]);
                     break;
                 case 'edit':
+                    loadUpdateDocumentForm(row.data()["id"])
                     break;
                 default:
                     break
@@ -188,6 +206,33 @@ function createDocument() {
         });
     }
 }
+function updateDocument() {
+    var form = $("#updateDocumentForm");
+    var url = form.attr('action');
+    if (form.valid()) {
+        $.ajax({
+            url: url,
+            xhrFields: {
+                withCredentials: true
+            },
+            data: form.serialize(),
+            method: "POST",
+            success: function (response) {
+                $('#modalContainer').modal('toggle');
+                $('#documentsDatatable').DataTable().ajax.reload();
+                refreshDocumentsTree();
+            },
+            error: function (response) {
+                var errorDiv = $("#updateDocumentErrors");
+                errorDiv.empty();
+                $.each(response.responseJSON, function (key, value) {
+                    errorDiv.append("<p>" + value + "</p>");
+                });
+                document.getElementById("updateDocumentErrors").hidden = false;
+            }
+        });
+    }
+}
 
 function createProject() {
     var form = $("#createProjectForm");
@@ -260,6 +305,18 @@ function populateMicroSelect(id) {
         }
     });
 }
+
+function selectUpdateMicroSelect(microId) {   
+    var microSelect = document.getElementById("microValue");
+    console.log(microSelect);
+    for (var i = 0; i < microSelect.options.length; i++) {
+        if (microSelect.options[i].value == microId) {
+            microSelect.options[i].selected = true;
+            break;
+        }
+    }
+}
+
 function populateProjectSelect(id) {
     $.ajax({
         url: "/Cedacri/GetInstitutionProjects",
@@ -295,7 +352,6 @@ function renderProjectSelect(element) {
         document.getElementById("projectSelect").hidden = false;
     }
     else {
-        document.getElementById("projectValue")[0].selected = true;
         document.getElementById("projectSelect").hidden = true;
     }
 }
@@ -315,7 +371,6 @@ function renderMicroSelect(element) {
     var text = element.options[element.selectedIndex].text;
 
     if (text == "SLA") {
-        document.getElementById("microValue")[0].selected = true;
         document.getElementById("microSelect").hidden = true;
     }
     else {
@@ -397,5 +452,15 @@ function refreshProjetsTree() {
             $('#projtree').jstree(true).refresh();
         }
     });
+}
+function showAllDocuments() {
+    var table = $('#documentsDatatable').DataTable();
+    table.columns().search('');
+    table.draw();
+}
+function showAllProjects() {
+    var table = $('#projectsDatatable').DataTable();
+    table.columns().search('');
+    table.draw();
 }
 

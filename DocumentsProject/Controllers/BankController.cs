@@ -1,4 +1,5 @@
-﻿using Application.Documents.Queries.BankOperator.GetDocumentDetails;
+﻿#nullable disable
+using Application.Documents.Queries.BankOperator.GetDocumentDetails;
 using Application.Documents.Queries.BankOperator.GetFileById;
 using Application.Documents.Queries.BankOperator.GetProjectReportDocuments;
 using Application.Documents.Queries.BankOperator.GetServiceReportDocuments;

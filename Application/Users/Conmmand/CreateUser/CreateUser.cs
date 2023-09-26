@@ -3,7 +3,6 @@ using Application.Responses;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace Application.Users.Conmmand.CreateUser
 {

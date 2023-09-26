@@ -39,6 +39,7 @@ namespace Application.Istitutions.Queries.GetInstitutionsTable
                 .Take(request.Parameters.Length)
                 .Select(x => new InstitutionListDto
                 {
+                    Id = x.Id,
                     Name = x.Name,
                     InstCode = x.InstCode,
                     AdditionalInfo = x.AdditionalInfo
