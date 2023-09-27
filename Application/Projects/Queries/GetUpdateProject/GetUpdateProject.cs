@@ -31,7 +31,6 @@ namespace Application.Projects.Queries.GetUpdateProject
                         Name = x.Name,
                         IdInstitution = x.IdInstitution,
                         AdditionalInfo = x.AdditionalInfo,
-                        IdUser = x.IdUser,
                         IsActive = x.IsActive
                     }).FirstAsync();
 

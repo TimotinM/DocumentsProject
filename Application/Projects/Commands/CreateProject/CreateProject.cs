@@ -13,9 +13,11 @@ namespace Application.Projects.Commands.CreateProject
     public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, BaseCommandResponse>
     {
         private readonly IApplicationDbContext _context;
-        public CreateProjectCommandHandler(IApplicationDbContext context)
+        private readonly IAuthService _authService;
+        public CreateProjectCommandHandler(IApplicationDbContext context, IAuthService authService)
         {
-            _context = context; 
+            _context = context;
+            _authService = authService;
         }
         public async Task<BaseCommandResponse> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
@@ -39,7 +41,7 @@ namespace Application.Projects.Commands.CreateProject
                     IdInstitution = request.Project.IdInstitution,
                     AdditionalInfo = request.Project.AdditionalInfo,
                     IsActive = true,
-                    IdUser = request.Project.IdUser,
+                    ApplicationUser = await _authService.GetCurrentUserAsync(),
                 };
 
                 await _context.Projects.AddAsync(entity);

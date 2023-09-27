@@ -2,7 +2,6 @@
 using Application.Responses;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 
 namespace Application.Documents.Commands.CreateDocument
@@ -16,13 +15,13 @@ namespace Application.Documents.Commands.CreateDocument
     {
         private readonly IApplicationDbContext _context;
         private readonly IHostEnvironment _hostEnvironment;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAuthService _authService;
 
-        public CreateDocumentCommandHandler(IApplicationDbContext context, IHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager)
+        public CreateDocumentCommandHandler(IApplicationDbContext context, IHostEnvironment hostEnvironment, IAuthService authService)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
-            _userManager = userManager;
+            _authService = authService;
         }
 
         public IHostEnvironment HostEnvironment { get; }
@@ -66,7 +65,7 @@ namespace Application.Documents.Commands.CreateDocument
                 {
                     IdInstitution = request.DocumentDto.IdInstitution,
                     IdProject = request.DocumentDto.IdProject,
-                    IdUser = request.DocumentDto.IdUser,
+                    ApplicationUser = await _authService.GetCurrentUserAsync(),
                     IdType = (int)(request.DocumentDto.IdMicro != null ? request.DocumentDto.IdMicro : request.DocumentDto.IdMacro),
                     AdditionalInfo = request.DocumentDto.AdditionalInfo,
                     UploadDate = DateTime.Now,

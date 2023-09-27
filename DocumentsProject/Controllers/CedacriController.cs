@@ -19,7 +19,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Application.TableParameters;
-using System.Security.Claims;
 
 namespace DocumentsProject.Controllers
 {
@@ -27,12 +26,10 @@ namespace DocumentsProject.Controllers
     public class CedacriController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CedacriController(IMediator mediator, IHttpContextAccessor httpContextAccessor)
+        public CedacriController(IMediator mediator)
         {
             _mediator = mediator;
-            _httpContextAccessor = httpContextAccessor;
         }
         [HttpGet]
         public IActionResult Index()
@@ -79,7 +76,6 @@ namespace DocumentsProject.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> CreateDocument([FromForm] CreateDocumentDto request)
         {
-            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new CreateDocumentCommand() { DocumentDto = request });
 
             if (!response.Success)
@@ -102,7 +98,6 @@ namespace DocumentsProject.Controllers
         public async Task<ActionResult> UpdateDocument(int documentId, [FromForm] UpdateDocumentDto request)
         {
             request.Id = documentId;
-            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new UpdateDocumentRequest() { DocumentDto = request });
             if (!response.Success)
                 return BadRequest(response.Errors);
@@ -143,7 +138,6 @@ namespace DocumentsProject.Controllers
         public async Task<ActionResult> UpdateProject(int projectId, [FromForm] UpdateProjectDto request)
         {
             request.Id = projectId;
-            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new UpdateProjectCommand() { ProjectDto =  request });
 
             if (!response.Success)
@@ -161,7 +155,6 @@ namespace DocumentsProject.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseCommandResponse>> CreateProject([FromForm] CreateProjectDto request)
         {
-            request.IdUser = Int32.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var response = await _mediator.Send(new CreateProjectCommand() { Project = request });
 
             if (!response.Success)

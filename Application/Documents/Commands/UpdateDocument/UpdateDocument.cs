@@ -14,9 +14,11 @@ namespace Application.Documents.Commands.UpdateDocument
     public class UpdateDocumentRequestHandler : IRequestHandler<UpdateDocumentRequest, BaseCommandResponse>
     {
         private readonly IApplicationDbContext _context;
-        public UpdateDocumentRequestHandler(IApplicationDbContext context)
+        private readonly IAuthService _authService;
+        public UpdateDocumentRequestHandler(IApplicationDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
         public async Task<BaseCommandResponse> Handle(UpdateDocumentRequest request, CancellationToken cancellationToken)
         {
@@ -40,7 +42,7 @@ namespace Application.Documents.Commands.UpdateDocument
                 document.GroupingDate = request.DocumentDto.GroupingDate;
                 document.AdditionalInfo = request.DocumentDto.AdditionalInfo;
                 document.IdProject = request.DocumentDto.IdProject;
-                document.IdUser = request.DocumentDto.IdUser;
+                document.ApplicationUser = await _authService.GetCurrentUserAsync();
 
                 await _context.SaveChangesAsync(cancellationToken);
 

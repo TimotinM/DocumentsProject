@@ -19,7 +19,7 @@ namespace Application.Projects.Queries.GetProjectDropDownList
         public async Task<List<ProjectsDropDownListDto>> Handle(GetProjectDropDownListRequest request, CancellationToken cancellationToken)
         {
             var response = await _context.Projects
-                .Where(x => x.IdInstitution == request.InstitutionId)
+                .Where(x => x.IdInstitution == request.InstitutionId && x.IsActive)
                 .Select(x => new ProjectsDropDownListDto()
                 {
                     Id = x.Id,

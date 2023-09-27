@@ -13,10 +13,12 @@ namespace Application.Projects.Commands.UpdateProject
     public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, BaseCommandResponse>
     {
         private readonly IApplicationDbContext _context;
+        private readonly IAuthService _authService; 
 
-        public UpdateProjectCommandHandler(IApplicationDbContext context)
+        public UpdateProjectCommandHandler(IApplicationDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
         public async Task<BaseCommandResponse> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
@@ -39,7 +41,7 @@ namespace Application.Projects.Commands.UpdateProject
                 project.DateTill = request.ProjectDto.DateTill;
                 project.AdditionalInfo = request.ProjectDto.AdditionalInfo;
                 project.IsActive = request.ProjectDto.IsActive;
-                project.IdUser = request.ProjectDto.IdUser;
+                project.ApplicationUser = await _authService.GetCurrentUserAsync();
 
                 await _context.SaveChangesAsync(cancellationToken);
 
