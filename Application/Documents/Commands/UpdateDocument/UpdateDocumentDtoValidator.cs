@@ -30,6 +30,8 @@ namespace Application.Documents.Commands.UpdateDocument
                 .WithMessage("Institution is required");
 
             RuleFor(x => x.IdProject)
+                .Null()
+                .WhenAsync(async (doc, cancellation) => doc.IdMacro != await GetProjectTypeId())
                 .NotEmpty()
                 .WhenAsync(async (doc, cancellation) => doc.IdMacro == await GetProjectTypeId())
                 .WithMessage("Project is required");

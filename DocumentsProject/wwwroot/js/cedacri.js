@@ -347,7 +347,9 @@ function macroChange(element) {
 
 function renderProjectSelect(element) {
     var text = element.options[element.selectedIndex].text;
-
+    $("#projectValue").append(
+        $("<option disabled selected hidden>").val("").text("--Select Project--")
+    );
     if (text == "Project") {
         document.getElementById("projectSelect").hidden = false;
     }

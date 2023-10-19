@@ -1,4 +1,7 @@
+using Application.Common.Middelware;
+using HealthChecks.UI.Client;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +11,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddMVCServices();
+builder.Services.AddMVCServices(builder.Configuration);
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
 var app = builder.Build();
 
@@ -35,6 +40,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseMiddleware<AutoLogoutMiddleware>();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecksUI();
 
 app.MapControllerRoute(
     name: "default",

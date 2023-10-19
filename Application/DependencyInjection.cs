@@ -1,5 +1,8 @@
-﻿using FluentValidation;
+﻿using Application.Common.Behaviors;
+using FluentValidation;
+using MediatR;
 using System.Reflection;
+using Quartz;
 
 namespace Microsoft.Extensions.DependencyInjection;
 public static class DependencyInjection
@@ -13,6 +16,7 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
         });
 
         return services;
